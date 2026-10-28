@@ -19,9 +19,6 @@ export function Footer() {
         {/* Editorial rule & top section */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
           <div className="md:col-span-6 space-y-3">
-            <span className="text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-mono">
-              Editorial Portfolio Prototype
-            </span>
             <p className="font-serif text-lg text-[#1B1B1B] dark:text-[#ECEBE6]">
               {content.profile.fullName}
             </p>
@@ -96,7 +93,7 @@ export function Footer() {
         {/* Bottom bar with back-to-top */}
         <div className="pt-8 border-t border-[#E4E2DC] dark:border-[#272B27] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <p>
-            Prototype design and content specification. Prepared for Astro implementation.
+            &copy; 2026 {content.profile.fullName}
           </p>
           <button
             type="button"

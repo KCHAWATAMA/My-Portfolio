@@ -33,7 +33,12 @@ export function CredentialsPage() {
       <section aria-label="Certificates directory">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {content.credentials.map((cert: Certificate, index: number) => {
-            const hasLiveLink = cert.verifyUrl && cert.verifyUrl !== '[ADD LINK]';
+            const hasLiveLink = Boolean(
+              cert.verifyUrl &&
+              cert.verifyUrl.trim() !== '' &&
+              cert.verifyUrl !== '[ADD LINK]' &&
+              cert.verifyUrl !== '[ADD]'
+            );
 
             return (
               <div
@@ -60,8 +65,9 @@ export function CredentialsPage() {
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-[#E4E2DC] dark:border-[#272B27]">
-                  {hasLiveLink ? (
+                {/* Requirement 13: Credentials without a link show no "Verify" line */}
+                {hasLiveLink && (
+                  <div className="pt-4 border-t border-[#E4E2DC] dark:border-[#272B27]">
                     <a
                       href={cert.verifyUrl}
                       target="_blank"
@@ -71,12 +77,8 @@ export function CredentialsPage() {
                       <span>Verify Credential</span>
                       <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
                     </a>
-                  ) : (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-mono text-[#5A5A55] dark:text-[#9E9D96]">
-                      <span>Verify: [ADD LINK]</span>
-                    </span>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             );
           })}

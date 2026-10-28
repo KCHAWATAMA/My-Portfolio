@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { content, Project } from '../content.ts';
 import { ArchitectureDiagram } from '../components/ArchitectureDiagram.tsx';
 import { ResultsChart } from '../components/ResultsChart.tsx';
-import { PlaceholderBox } from '../components/PlaceholderBox.tsx';
-import { ArrowLeft, ExternalLink, Github, Clock, ShieldCheck, AlertCircle } from 'lucide-react';
+import { LightboxModal } from '../components/LightboxModal.tsx';
+import { ArrowLeft, ExternalLink, Github, Clock, ShieldCheck, AlertCircle, Maximize2 } from 'lucide-react';
 
 interface CaseStudyPageProps {
   slug: string;
@@ -16,18 +16,21 @@ interface CaseStudyPageProps {
 
 export function CaseStudyPage({ slug }: CaseStudyPageProps) {
   const project: Project | undefined = content.projects.find((p) => p.slug === slug);
+  const [activeLightboxImage, setActiveLightboxImage] = useState<{
+    imageUrl: string;
+    altText: string;
+    title?: string;
+    caption?: string;
+  } | null>(null);
 
   if (!project) {
     return (
       <div className="py-16 text-center space-y-4">
-        <span className="font-mono text-xs uppercase text-[#0E6B5C] dark:text-[#3FB59B]">
-          404 Not Found
-        </span>
         <h1 className="font-serif text-2xl font-bold text-[#1B1B1B] dark:text-[#ECEBE6]">
-          Project Not Found
+          Page Not Found
         </h1>
         <p className="text-sm text-[#5A5A55] dark:text-[#9E9D96]">
-          No project matches the requested slug: &ldquo;{slug}&rdquo;.
+          This page does not exist. Go back to the home page.
         </p>
         <a
           href="#/projects"
@@ -40,15 +43,12 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
     );
   }
 
-  const isLiveDemoAvailable =
-    project.links.liveDemo &&
-    project.links.liveDemo !== '[ADD LINK]' &&
-    project.links.liveDemo !== '[ADD]';
-
-  const isGithubAvailable =
-    project.links.github &&
-    project.links.github !== '[ADD LINK]' &&
-    project.links.github !== '[ADD]';
+  const isAeroTwin = project.id === 'aerotwin';
+  const hasLiveDemo = Boolean(project.links?.liveDemo && project.links.liveDemo !== '[ADD LINK]' && project.links.liveDemo !== '[ADD]');
+  const hasGithub = Boolean(project.links?.github && project.links.github !== '[ADD LINK]' && project.links.github !== '[ADD]');
+  const hasKeyMetric = Boolean(project.keyMetric && project.keyMetric !== '[ADD]');
+  const hasLessons = Boolean(project.lessons && project.lessons.length > 0);
+  const galleryItems = (project.gallery || []).filter((item) => Boolean(item.imageUrl));
 
   return (
     <article className="space-y-16 sm:space-y-20 py-4" aria-labelledby="case-study-title">
@@ -113,41 +113,83 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           ))}
         </div>
 
-        {/* Project Links & Actions */}
-        <div className="pt-4 flex flex-wrap items-center gap-4">
-          {isGithubAvailable ? (
-            <a
-              href={project.links.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#FAFAF7] bg-[#1B1B1B] hover:bg-[#333333] dark:bg-[#ECEBE6] dark:text-[#121412] dark:hover:bg-[#FFFFFF] transition-colors"
-            >
-              <Github className="w-4 h-4" aria-hidden="true" />
-              <span>View GitHub Repository</span>
-            </a>
-          ) : (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono text-[#5A5A55] dark:text-[#9E9D96] border border-[#E4E2DC] dark:border-[#272B27]">
-              <Github className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Code repository: [ADD]</span>
-            </div>
-          )}
+        {/* Requirement 10: Summary Box (My role, Tools, Outcome, Links) */}
+        <div className="mt-8 p-6 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] space-y-4">
+          <span className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold block">
+            Project Overview
+          </span>
 
-          {isLiveDemoAvailable ? (
-            <a
-              href={project.links.liveDemo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#FAFAF7] bg-[#0E6B5C] hover:bg-[#0A4F44] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors"
-            >
-              <ExternalLink className="w-4 h-4" aria-hidden="true" />
-              <span>Launch Live Demo</span>
-            </a>
-          ) : (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono text-[#0E6B5C] dark:text-[#3FB59B] border border-[#0E6B5C]/30 dark:border-[#3FB59B]/30 bg-[#0E6B5C]/5 dark:bg-[#3FB59B]/10">
-              <Clock className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Live demo coming soon</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+            <div className="space-y-3">
+              <div>
+                <span className="font-mono text-[#5A5A55] dark:text-[#9E9D96] block uppercase tracking-wider text-[11px] mb-0.5">
+                  My Role
+                </span>
+                <p className="font-serif text-sm font-semibold text-[#1B1B1B] dark:text-[#ECEBE6]">
+                  {project.role}
+                </p>
+              </div>
+
+              <div>
+                <span className="font-mono text-[#5A5A55] dark:text-[#9E9D96] block uppercase tracking-wider text-[11px] mb-0.5">
+                  Tools
+                </span>
+                <p className="text-xs text-[#1B1B1B] dark:text-[#ECEBE6] font-mono">
+                  {project.tools}
+                </p>
+              </div>
             </div>
-          )}
+
+            <div className="space-y-3">
+              {hasKeyMetric && (
+                <div>
+                  <span className="font-mono text-[#5A5A55] dark:text-[#9E9D96] block uppercase tracking-wider text-[11px] mb-0.5">
+                    Outcome
+                  </span>
+                  <p className="font-mono font-semibold text-sm text-[#0E6B5C] dark:text-[#3FB59B]">
+                    {project.keyMetric}
+                  </p>
+                </div>
+              )}
+
+              {(hasGithub || hasLiveDemo || isAeroTwin) && (
+                <div>
+                  <span className="font-mono text-[#5A5A55] dark:text-[#9E9D96] block uppercase tracking-wider text-[11px] mb-1">
+                    Links
+                  </span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    {hasGithub && (
+                      <a
+                        href={project.links.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#FAFAF7] bg-[#1B1B1B] hover:bg-[#333333] dark:bg-[#ECEBE6] dark:text-[#121412] dark:hover:bg-[#FFFFFF] transition-colors"
+                      >
+                        <Github className="w-3.5 h-3.5" aria-hidden="true" />
+                        <span>GitHub</span>
+                      </a>
+                    )}
+                    {hasLiveDemo ? (
+                      <a
+                        href={project.links.liveDemo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#FAFAF7] bg-[#0E6B5C] hover:bg-[#0A4F44] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                        <span>Live demo</span>
+                      </a>
+                    ) : isAeroTwin ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-[#0E6B5C] dark:text-[#3FB59B] border border-[#0E6B5C]/30 dark:border-[#3FB59B]/30 bg-[#0E6B5C]/5 dark:bg-[#3FB59B]/10">
+                        <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+                        <span>Live demo coming soon</span>
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
       </header>
@@ -274,28 +316,82 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           </div>
         </section>
 
-        {/* 08. Image Gallery */}
-        <section className="space-y-6" aria-labelledby="section-gallery">
-          <div className="flex items-center gap-3">
-            <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
-            <h2 id="section-gallery" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-              08. Interface and Artifact Gallery
-            </h2>
-          </div>
+        {/* Requirement 11: Challenges and what I learned (shown ONLY when filled) */}
+        {hasLessons && (
+          <section className="space-y-4" aria-labelledby="section-lessons">
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
+              <h2 id="section-lessons" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
+                08. Challenges and what I learned
+              </h2>
+            </div>
+            <ul className="space-y-2 text-sm text-[#1B1B1B] dark:text-[#ECEBE6] list-disc list-inside max-w-[68ch]">
+              {project.lessons?.map((lesson, i) => (
+                <li key={i}>{lesson}</li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {project.gallery.map((item) => (
-              <PlaceholderBox
-                key={item.id}
-                label="[ADD SCREENSHOT]"
-                aspectRatio="16:9"
-                altText={item.altText}
-                caption={item.caption}
-                imageUrl={item.imageUrl}
-              />
-            ))}
-          </div>
-        </section>
+        {/* Image Gallery (shown ONLY when images exist, e.g. KaribuTech has no images so this is hidden) */}
+        {galleryItems.length > 0 && (
+          <section className="space-y-6" aria-labelledby="section-gallery">
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
+              <h2 id="section-gallery" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
+                {hasLessons ? "09. Interface and Artifact Gallery" : "08. Interface and Artifact Gallery"}
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {galleryItems.map((item) => (
+                <figure key={item.id} className="w-full space-y-2">
+                  <div
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`View ${item.title || item.altText} in larger view`}
+                    onClick={() => setActiveLightboxImage({
+                      imageUrl: item.imageUrl!,
+                      altText: item.altText,
+                      title: item.title,
+                      caption: item.caption
+                    })}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveLightboxImage({
+                          imageUrl: item.imageUrl!,
+                          altText: item.altText,
+                          title: item.title,
+                          caption: item.caption
+                        });
+                      }
+                    }}
+                    className="group relative w-full aspect-[16/10] bg-[#F4F3EE] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] overflow-hidden flex items-center justify-center cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-[#0E6B5C] dark:focus:ring-[#3FB59B]"
+                  >
+                    <img
+                      src={item.imageUrl}
+                      alt={item.altText}
+                      width={1600}
+                      height={1000}
+                      loading="lazy"
+                      className="w-full h-full object-contain p-2"
+                    />
+                    <div className="absolute bottom-2 right-2 px-2 py-1 bg-[#121412]/80 text-[#ECEBE6] text-[11px] font-mono flex items-center gap-1 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
+                      <Maximize2 className="w-3 h-3" aria-hidden="true" />
+                      <span>Enlarge</span>
+                    </div>
+                  </div>
+                  {item.caption && (
+                    <figcaption className="text-xs text-[#5A5A55] dark:text-[#9E9D96] font-sans leading-relaxed">
+                      {item.caption}
+                    </figcaption>
+                  )}
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
 
       </div>
 
@@ -315,6 +411,16 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           <span>Discuss this project with Kuzivakwashe →</span>
         </a>
       </div>
+
+      {/* Accessible Lightbox Modal */}
+      <LightboxModal
+        isOpen={Boolean(activeLightboxImage)}
+        onClose={() => setActiveLightboxImage(null)}
+        imageUrl={activeLightboxImage?.imageUrl || ''}
+        altText={activeLightboxImage?.altText || ''}
+        title={activeLightboxImage?.title}
+        caption={activeLightboxImage?.caption}
+      />
 
     </article>
   );

@@ -4,9 +4,9 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { content } from '../content.ts';
+import { content, MoreWorkItem } from '../content.ts';
 import { ProjectCard } from '../components/ProjectCard.tsx';
-import { Filter, RefreshCcw } from 'lucide-react';
+import { Filter, RefreshCcw, ExternalLink } from 'lucide-react';
 
 export function ProjectsPage() {
   const [selectedTag, setSelectedTag] = useState<string>('All');
@@ -39,7 +39,7 @@ export function ProjectsPage() {
   };
 
   return (
-    <div className="space-y-12 sm:space-y-16">
+    <div className="space-y-16 sm:space-y-20">
       
       {/* Header */}
       <section className="space-y-4 border-b border-[#E4E2DC] dark:border-[#272B27] pb-8 pt-4">
@@ -128,7 +128,7 @@ export function ProjectsPage() {
       {/* Projects Grid or Empty State */}
       <section aria-label="Projects list">
         {filteredProjects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {filteredProjects.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
@@ -158,6 +158,101 @@ export function ProjectsPage() {
           </div>
         )}
       </section>
+
+      {/* More Work Grid (2 columns desktop, 1 mobile) */}
+      {content.moreWork && content.moreWork.length > 0 && (
+        <section className="space-y-8 pt-10 border-t border-[#E4E2DC] dark:border-[#272B27]" aria-labelledby="more-work-title">
+          <div className="flex items-center gap-3">
+            <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
+            <h2 id="more-work-title" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
+              More work
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {content.moreWork.map((item: MoreWorkItem) => {
+              const hasTitle = Boolean(item.title && item.title.trim() && item.title !== '[ ]' && item.title !== '[ADD]');
+              const hasYear = Boolean(item.year && item.year.trim() && item.year !== '[ ]');
+              const hasSummary = Boolean(item.summary && item.summary.trim() && item.summary !== '[ ]');
+              const hasTools = Boolean(item.tools && item.tools.length > 0);
+              const hasLink = Boolean(item.link && item.link.trim() && item.link !== '[ ]' && item.link !== '[ADD LINK]');
+              const hasImage = Boolean(item.image && item.image.trim());
+
+              return (
+                <article
+                  key={item.id}
+                  className="bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] flex flex-col justify-between overflow-hidden"
+                >
+                  {/* Optional image (fixed 16:10 frame, object-cover) */}
+                  {hasImage && (
+                    <div className="w-full aspect-[16/10] bg-[#F4F3EE] dark:bg-[#121412] border-b border-[#E4E2DC] dark:border-[#272B27] overflow-hidden">
+                      <img
+                        src={item.image}
+                        alt={hasTitle ? (item.title as string) : "Project preview"}
+                        width={1600}
+                        height={1000}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+
+                  {/* Body - only render fields that exist */}
+                  {(hasTitle || hasYear || hasSummary || hasTools || hasLink) && (
+                    <div className="p-6 space-y-4">
+                      {(hasTitle || hasYear) && (
+                        <div className="flex items-baseline justify-between gap-2">
+                          {hasTitle && (
+                            <h3 className="font-serif text-lg font-semibold text-[#1B1B1B] dark:text-[#ECEBE6]">
+                              {item.title}
+                            </h3>
+                          )}
+                          {hasYear && (
+                            <span className="text-xs font-mono text-[#5A5A55] dark:text-[#9E9D96]">
+                              {item.year}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {hasSummary && (
+                        <p className="text-xs text-[#5A5A55] dark:text-[#9E9D96] leading-relaxed">
+                          {item.summary}
+                        </p>
+                      )}
+
+                      {hasTools && item.tools && (
+                        <div className="flex flex-wrap items-center gap-x-2 text-xs font-mono text-[#5A5A55] dark:text-[#9E9D96]">
+                          {item.tools.map((t, i) => (
+                            <React.Fragment key={t}>
+                              <span>{t}</span>
+                              {i < (item.tools?.length || 0) - 1 && <span aria-hidden="true">·</span>}
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      )}
+
+                      {hasLink && (
+                        <div className="pt-2">
+                          <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#0E6B5C] dark:text-[#3FB59B] hover:underline"
+                          >
+                            <span>View Project</span>
+                            <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
     </div>
   );

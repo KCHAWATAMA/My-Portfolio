@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { Project } from '../content.ts';
-import { PlaceholderBox } from './PlaceholderBox.tsx';
 import { ArrowUpRight } from 'lucide-react';
 
 interface ProjectCardProps {
@@ -15,20 +14,27 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, index }: ProjectCardProps) {
   const caseStudyUrl = `#/projects/${project.slug}`;
+  const hasImage = Boolean(project.imageUrl);
+  const hasKeyMetric = Boolean(project.keyMetric && project.keyMetric !== '[ADD]');
 
   return (
     <article className="group flex flex-col bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#0E6B5C] dark:hover:border-[#3FB59B] transition-colors">
       
-      {/* Screenshot / Visual slot */}
-      <a href={caseStudyUrl} className="block overflow-hidden focus:outline-hidden" tabIndex={-1} aria-hidden="true">
-        <PlaceholderBox
-          label="[ADD SCREENSHOT]"
-          aspectRatio="16:9"
-          altText={`Screenshot placeholder for ${project.title}`}
-          imageUrl={project.gallery?.[0]?.imageUrl}
-          className="border-b border-[#E4E2DC] dark:border-[#272B27]"
-        />
-      </a>
+      {/* Visual slot (fixed 16:10 frame, object-fit cover, width and height set, loading lazy) - ONLY if project has image */}
+      {hasImage && (
+        <a href={caseStudyUrl} className="block overflow-hidden focus:outline-hidden" tabIndex={-1} aria-hidden="true">
+          <div className="relative w-full aspect-[16/10] bg-[#F4F3EE] dark:bg-[#181B18] border-b border-[#E4E2DC] dark:border-[#272B27] overflow-hidden">
+            <img
+              src={project.imageUrl}
+              alt={project.title}
+              width={1600}
+              height={1000}
+              loading="lazy"
+              className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+            />
+          </div>
+        </a>
+      )}
 
       {/* Card Body */}
       <div className="p-6 flex flex-col flex-grow justify-between space-y-4">
@@ -81,15 +87,17 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             ))}
           </div>
 
-          {/* Key result in monospace */}
-          <div className="flex items-center justify-between text-xs pt-1">
-            <span className="text-[#5A5A55] dark:text-[#9E9D96] font-sans">
-              Key Metric:
-            </span>
-            <span className="font-mono tabular-nums font-medium text-[#1B1B1B] dark:text-[#ECEBE6]">
-              {project.keyMetric}
-            </span>
-          </div>
+          {/* Key result in monospace (hidden if empty/missing) */}
+          {hasKeyMetric && (
+            <div className="flex items-center justify-between text-xs pt-1">
+              <span className="text-[#5A5A55] dark:text-[#9E9D96] font-sans">
+                Key Metric:
+              </span>
+              <span className="font-mono tabular-nums font-medium text-[#1B1B1B] dark:text-[#ECEBE6]">
+                {project.keyMetric}
+              </span>
+            </div>
+          )}
 
           {/* Case study link text */}
           <div className="pt-2">

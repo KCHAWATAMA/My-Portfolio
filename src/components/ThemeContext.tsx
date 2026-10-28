@@ -18,9 +18,13 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('kuziva-portfolio-theme');
-      if (stored === 'light' || stored === 'dark') {
-        return stored;
+      try {
+        const stored = localStorage.getItem('kuziva-portfolio-theme');
+        if (stored === 'light' || stored === 'dark') {
+          return stored;
+        }
+      } catch {
+        // Ignore localStorage access errors (e.g. private browsing)
       }
       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         return 'dark';
@@ -36,7 +40,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('kuziva-portfolio-theme', theme);
+    try {
+      localStorage.setItem('kuziva-portfolio-theme', theme);
+    } catch {
+      // Ignore localStorage access errors
+    }
   }, [theme]);
 
   const toggleTheme = () => {

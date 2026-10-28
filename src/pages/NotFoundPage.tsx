@@ -22,7 +22,7 @@ export function NotFoundPage() {
       </h1>
 
       <p className="text-base text-[#5A5A55] dark:text-[#9E9D96] leading-relaxed">
-        The requested address does not correspond to an existing record or case study in this portfolio prototype.
+        This page does not exist. Go back to the home page.
       </p>
 
       <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
@@ -31,7 +31,7 @@ export function NotFoundPage() {
           className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#FAFAF7] bg-[#0E6B5C] dark:bg-[#3FB59B] dark:text-[#121412] hover:bg-[#0A4F44] dark:hover:bg-[#4FD3B6] transition-colors"
         >
           <Home className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>Return to Home</span>
+          <span>Home page</span>
         </a>
 
         <a

@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { content } from '../content.ts';
-import { PlaceholderBox } from '../components/PlaceholderBox.tsx';
 import { GraduationCap, Briefcase, Globe, Award } from 'lucide-react';
 
 export function AboutPage() {
@@ -33,14 +32,18 @@ export function AboutPage() {
       {/* Story & Photo Section */}
       <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start" aria-labelledby="story-title">
         
-        {/* Photo Slot */}
+        {/* Photo Slot (Square crop, subtle 1px hairline border, no circle, no shadow) */}
         <div className="md:col-span-5 space-y-3">
-          <PlaceholderBox
-            label="[ADD PHOTO]"
-            aspectRatio="1:1"
-            altText={content.profile.photoAlt}
-            caption="Figure: Kuzivakwashe Joshua Chawatama, based in Al Wakra, Qatar."
-          />
+          <div className="w-full aspect-square bg-[#F4F3EE] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] overflow-hidden">
+            <img
+              src={content.profile.photoUrl}
+              alt={content.profile.photoAlt}
+              width={800}
+              height={800}
+              loading="lazy"
+              className="w-full h-full object-cover rounded-none"
+            />
+          </div>
           <div className="p-4 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] space-y-1.5 text-xs font-mono">
             <div className="flex justify-between">
               <span className="text-[#5A5A55] dark:text-[#9E9D96]">Location:</span>

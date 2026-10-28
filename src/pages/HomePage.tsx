@@ -15,53 +15,100 @@ export function HomePage() {
     <div className="space-y-20 sm:space-y-24">
       
       {/* Hero Section */}
-      <section className="pt-8 sm:pt-14 pb-4 border-b border-[#E4E2DC] dark:border-[#272B27]" aria-labelledby="hero-title">
-        <div className="max-w-4xl space-y-6">
+      <section className="pt-8 sm:pt-14 pb-8 border-b border-[#E4E2DC] dark:border-[#272B27]" aria-labelledby="hero-title">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           
-          {/* Identity line */}
-          <div className="flex items-center gap-3">
-            <span className="w-8 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
-            <p className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-              {content.profile.identityLine}
+          {/* Mobile Profile Photo (above the name on mobile, hidden on md+) */}
+          <div className="md:hidden w-36 h-36">
+            <img
+              src={content.profile.photoUrl}
+              alt={content.profile.photoAlt}
+              width={800}
+              height={800}
+              loading="lazy"
+              className="w-full h-full object-cover border border-[#E4E2DC] dark:border-[#272B27] rounded-none"
+            />
+          </div>
+
+          {/* Left Column: Typographic Content */}
+          <div className="md:col-span-8 space-y-6">
+            
+            {/* Identity line */}
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
+              <p className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
+                {content.profile.identityLine}
+              </p>
+            </div>
+
+            {/* Full Name & Headline */}
+            <h1 id="hero-title" className="font-serif text-3xl sm:text-5xl lg:text-5xl font-bold tracking-tight text-[#1B1B1B] dark:text-[#ECEBE6] leading-[1.15] text-balance">
+              {content.profile.fullName}
+            </h1>
+
+            {/* Pitch */}
+            <p className="text-lg sm:text-xl text-[#5A5A55] dark:text-[#9E9D96] leading-relaxed max-w-[68ch]">
+              {content.profile.pitch}
             </p>
+
+            {/* Quiet Recruiter Proof Strip (three facts in mono type) */}
+            <div className="py-2 border-y border-[#E4E2DC] dark:border-[#272B27]">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-[#0E6B5C] dark:text-[#3FB59B]">
+                {content.profile.proofStrip.map((fact, index) => (
+                  <React.Fragment key={fact}>
+                    <span>{fact}</span>
+                    {index < content.profile.proofStrip.length - 1 && (
+                      <span className="text-[#5A5A55] dark:text-[#9E9D96]" aria-hidden="true">·</span>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+
+            {/* Location and immediate status */}
+            <div className="text-xs font-mono text-[#5A5A55] dark:text-[#9E9D96] flex flex-wrap items-center gap-x-2">
+              <span>Location: {content.profile.location}</span>
+              <span aria-hidden="true">/</span>
+              <span className="text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
+                {content.profile.availability}
+              </span>
+            </div>
+
+            {/* Action buttons: Download CV (opens in new tab) with Email me right beside it */}
+            <div className="pt-2 flex flex-wrap items-center gap-4">
+              <a
+                href={content.profile.downloadCvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#FAFAF7] bg-[#0E6B5C] hover:bg-[#0A4F44] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors"
+              >
+                <FileText className="w-4 h-4" aria-hidden="true" />
+                <span>Download CV</span>
+              </a>
+
+              <a
+                href={`mailto:${content.profile.email}`}
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#1B1B1B] dark:text-[#ECEBE6] bg-transparent border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] transition-colors"
+              >
+                <Mail className="w-4 h-4" aria-hidden="true" />
+                <span>Email me</span>
+              </a>
+            </div>
+
           </div>
 
-          {/* Full Name & Headline */}
-          <h1 id="hero-title" className="font-serif text-3xl sm:text-5xl lg:text-5xl font-bold tracking-tight text-[#1B1B1B] dark:text-[#ECEBE6] leading-[1.15] text-balance">
-            {content.profile.fullName}
-          </h1>
-
-          {/* Pitch */}
-          <p className="text-lg sm:text-xl text-[#5A5A55] dark:text-[#9E9D96] leading-relaxed max-w-[68ch]">
-            {content.profile.pitch}
-          </p>
-
-          {/* Location and immediate status */}
-          <div className="text-xs font-mono text-[#5A5A55] dark:text-[#9E9D96] flex flex-wrap items-center gap-x-2">
-            <span>Location: {content.profile.location}</span>
-            <span aria-hidden="true">/</span>
-            <span className="text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-              {content.profile.availability}
-            </span>
-          </div>
-
-          {/* Action buttons: Download CV with Email me right beside it */}
-          <div className="pt-2 flex flex-wrap items-center gap-4">
-            <a
-              href="#/contact"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#FAFAF7] bg-[#0E6B5C] hover:bg-[#0A4F44] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors"
-            >
-              <FileText className="w-4 h-4" aria-hidden="true" />
-              <span>Download CV</span>
-            </a>
-
-            <a
-              href={`mailto:${content.profile.email}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#1B1B1B] dark:text-[#ECEBE6] bg-transparent border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] transition-colors"
-            >
-              <Mail className="w-4 h-4" aria-hidden="true" />
-              <span>Email me</span>
-            </a>
+          {/* Desktop Profile Photo (right side on desktop, square crop, 1px hairline border, no circle, no shadow) */}
+          <div className="hidden md:flex md:col-span-4 justify-end">
+            <div className="w-64 h-64 lg:w-72 lg:h-72 aspect-square">
+              <img
+                src={content.profile.photoUrl}
+                alt={content.profile.photoAlt}
+                width={800}
+                height={800}
+                loading="lazy"
+                className="w-full h-full object-cover border border-[#E4E2DC] dark:border-[#272B27] rounded-none"
+              />
+            </div>
           </div>
 
         </div>
@@ -124,7 +171,7 @@ export function HomePage() {
         </div>
 
         {/* Exactly 3 project cards in specified order */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
           {featuredProjects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}

@@ -1,6 +1,6 @@
 {
-  "name": "Kuzivakwashe Joshua Chawatama Portfolio Prototype",
-  "description": "Design and content prototype for Kuzivakwashe Joshua Chawatama, Data Scientist and Engineer. Built with an editorial data journal aesthetic.",
+  "name": "Portfolio",
+  "description": "Data scientist in Qatar building explainable machine learning, APIs and dashboards. Projects, case studies and CV.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }

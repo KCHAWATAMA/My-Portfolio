@@ -15,6 +15,7 @@ export interface Profile {
   fullName: string;
   identityLine: string;
   pitch: string;
+  proofStrip: string[];
   location: string;
   availability: string;
   email: string;
@@ -22,6 +23,7 @@ export interface Profile {
   linkedin: string;
   github: string;
   downloadCvUrl: string;
+  photoUrl: string;
   photoAlt: string;
   currently: {
     learning: string[];
@@ -96,9 +98,12 @@ export interface Project {
   title: string;
   tags: string[];
   summary: string;
-  keyMetric: string;
+  role: string;
+  tools: string;
+  keyMetric?: string;
   status: string;
   featured: boolean;
+  imageUrl?: string;
   confidentialityNote?: string;
   simulationLabel?: string;
   problem: string;
@@ -115,11 +120,22 @@ export interface Project {
     toolsUsed: string;
     verificationMethod: string;
   };
+  lessons?: string[];
   links: {
-    github: string;
-    liveDemo: string;
+    github?: string;
+    liveDemo?: string;
   };
   gallery: GalleryItem[];
+}
+
+export interface MoreWorkItem {
+  id: string;
+  title?: string;
+  year?: string;
+  summary?: string;
+  tools?: string[];
+  image?: string;
+  link?: string;
 }
 
 export interface Certificate {
@@ -127,7 +143,7 @@ export interface Certificate {
   title: string;
   issuer: string;
   year: string;
-  verifyUrl: string;
+  verifyUrl?: string;
 }
 
 export interface LanguageItem {
@@ -146,6 +162,7 @@ export interface PortfolioContent {
   education: EducationItem;
   timeline: TimelineEntry[];
   projects: Project[];
+  moreWork: MoreWorkItem[];
   credentials: Certificate[];
   languages: LanguageItem[];
   about: AboutContent;
@@ -156,14 +173,20 @@ export const content: PortfolioContent = {
     fullName: "Kuzivakwashe Joshua Chawatama",
     identityLine: "Data scientist who builds and ships.",
     pitch: "I turn data into working products, from explainable machine learning to the APIs and dashboards that put it in front of people. Data Science and Informatics graduate, University of Zimbabwe, with nine months building banking systems at KaribuTech AI.",
+    proofStrip: [
+      "RMSE 14.00 on NASA C-MAPSS FD001",
+      "200+ rule test cases",
+      "12 bank departments interviewed"
+    ],
     location: "Al Wakra, Qatar",
     availability: "Available immediately.",
     email: "kuzivakwashechawatama@gmail.com",
     phone: "+974 6652 7520",
     linkedin: "https://www.linkedin.com/in/kuzivakwashej",
     github: "https://github.com/KCHAWATAMA",
-    downloadCvUrl: "#contact",
-    photoAlt: "Portrait of Kuzivakwashe Joshua Chawatama, Data Scientist and Engineer",
+    downloadCvUrl: "/cv/Kuzivakwashe-Chawatama-CV.pdf",
+    photoUrl: "/images/profile.jpg",
+    photoAlt: "Kuzivakwashe Joshua Chawatama, Data Scientist and Engineer",
     currently: {
       learning: ["Microsoft PL-300 (Power BI)", "AZ-900 (Azure)", "Tableau"],
       status: "Available immediately in Al Wakra, Qatar for data science and engineering roles."
@@ -270,9 +293,12 @@ export const content: PortfolioContent = {
       title: "AeroTwin: explainable predictive maintenance for aircraft engines",
       tags: ["Machine Learning", "Explainable AI", "Full Stack"],
       summary: "Predicts the remaining useful life of turbofan engines from NASA C-MAPSS sensor data and explains each prediction, inside a digital twin dashboard.",
+      role: "Sole developer (final-year project)",
+      tools: "Python, TensorFlow, XGBoost, SHAP, LIME, FastAPI, Next.js",
       keyMetric: "RMSE 14.00 (R² 0.878)",
       status: "In progress (deployment)",
       featured: true,
+      imageUrl: "/images/aerotwin-dashboard.png",
       problem: "Unplanned engine maintenance is costly and disruptive. Planners need predictions they can trust and understand.",
       whatIBuilt: "An LSTM model blended with XGBoost, served by a FastAPI backend with SHAP, LIME and counterfactual explanations and Monte Carlo uncertainty, and a Next.js dashboard with CSV import and a 3D engine view.",
       data: "NASA C-MAPSS FD001 (public). 30-cycle windows, 17 input features, remaining life capped at 125 cycles, engine-wise splits.",
@@ -282,7 +308,7 @@ export const content: PortfolioContent = {
         description: "Sensor ingestion, hybrid model inference, explainability engines, and user dashboard.",
         nodes: [
           { id: "node-1", label: "NASA C-MAPSS FD001", sublabel: "17 sensor streams, 30-cycle windows", category: "data" },
-          { id: "node-2", label: "Preprocessing & Scaling", sublabel: "MinMax scaling, RUL cap at 125", category: "process" },
+          { id: "node-2", label: "Preprocessing & Scaling", sublabel: "Standard scaling, RUL cap at 125", category: "process" },
           { id: "node-3", label: "Hybrid LSTM + XGBoost", sublabel: "Sequential dynamics + tree boosting", category: "model" },
           { id: "node-4", label: "FastAPI Inference & XAI", sublabel: "SHAP, LIME, counterfactuals, uncertainty", category: "api" },
           { id: "node-5", label: "Next.js Digital Twin", sublabel: "CSV upload, explanations, 3D view", category: "ui" }
@@ -316,24 +342,27 @@ export const content: PortfolioContent = {
       },
       aiToolsUsage: {
         toolsUsed: "I used AI coding assistants to draft boilerplate FastAPI routing patterns and Next.js component skeletons.",
-        verificationMethod: "I verified all machine learning math, model loss curves, cross-validation splits, and SHAP mathematical outputs by running local unit tests, inspecting tensor dimensions, and comparing predictions against manual baseline calculations."
+        verificationMethod: "I checked model outputs against the official NASA test set and wrote a pytest suite for the data pipeline, inference, explanations and digital twin endpoints."
       },
+      lessons: [],
       links: {
         github: "https://github.com/KCHAWATAMA/aircraft-engine-predictive-maintenance",
-        liveDemo: "[ADD LINK]"
+        liveDemo: ""
       },
       gallery: [
         {
           id: "aerotwin-fig1",
           title: "Digital Twin Engine Dashboard",
           caption: "Figure 1. Digital twin interface showing remaining useful life estimates, confidence interval, and sensor telemetry feed.",
-          altText: "Digital twin dashboard with turbofan sensor indicators and remaining useful life gauge."
+          altText: "Digital twin dashboard with turbofan sensor indicators and remaining useful life gauge.",
+          imageUrl: "/images/aerotwin-dashboard.png"
         },
         {
           id: "aerotwin-fig2",
           title: "SHAP and Counterfactual Explanation Panel",
           caption: "Figure 2. Feature attribution waterfall chart detailing which sensor anomalies drove the predicted maintenance deadline.",
-          altText: "SHAP explanation plot highlighting sensor contributions to engine degradation score."
+          altText: "SHAP explanation plot highlighting sensor contributions to engine degradation score.",
+          imageUrl: "/images/aerotwin-shap.png"
         }
       ]
     },
@@ -343,50 +372,56 @@ export const content: PortfolioContent = {
       title: "SensorStream Analytics",
       tags: ["Data Engineering", "IoT Simulation", "Dashboards"],
       summary: "A local prototype that replays the UCI household electricity dataset through simulated Modbus and MQTT, processes it in Python, and shows it on a JavaScript monitoring dashboard and in Power BI reports.",
-      keyMetric: "[ADD]",
+      role: "Sole developer (independent project)",
+      tools: "Python, MQTT, Modbus, JavaScript, Power BI",
+      keyMetric: "",
       status: "Completed Prototype",
       featured: true,
+      imageUrl: "/images/sensorstream-dashboard.png",
       simulationLabel: "Simulation using public data",
       problem: "Industrial IoT teams require lightweight ways to test telemetry pipelines and power consumption monitors before hardware is connected in the field.",
       whatIBuilt: "A local data engineering pipeline simulating industrial sensor networks using Modbus and MQTT protocols, Python stream transformation workers, an interactive JavaScript dashboard, and synchronized Power BI analytical reports.",
-      data: "UCI Individual Household Electric Power Consumption dataset (public domain). Millions of sub-metered power measurements replayed at configured time multipliers.",
-      approach: "I constructed asynchronous protocol emulators for Modbus and MQTT broker streams. Python subscriber workers aggregate power spikes, handle missing packet simulation, and push structured records into local storage and dashboard feeds.",
+      data: "UCI Individual Household Electric Power Consumption dataset (public domain). Sub-metered power measurements replayed at configured time multipliers.",
+      approach: "I replayed the UCI data through simulated Modbus and MQTT feeds, processed the readings with Python, and showed them on a JavaScript dashboard and in Power BI reports.",
       architecture: {
         title: "Simulation Pipeline",
         description: "UCI record replay, protocol publisher, Python ingestion, and multi-surface dashboards.",
         nodes: [
           { id: "node-1", label: "UCI Electricity Dataset", sublabel: "Sub-metering public series", category: "data" },
           { id: "node-2", label: "Simulated Modbus & MQTT", sublabel: "Asynchronous protocol broker", category: "process" },
-          { id: "node-3", label: "Python Stream Worker", sublabel: "Aggregation & anomaly thresholding", category: "model" },
+          { id: "node-3", label: "Python Stream Worker", sublabel: "Aggregation", category: "model" },
           { id: "node-4", label: "Local API & Storage", sublabel: "Normalized time buckets", category: "api" },
           { id: "node-5", label: "JS Dashboard & Power BI", sublabel: "Live view + executive reports", category: "ui" }
         ]
       },
       results: {
-        summary: "[ADD] Performance metrics, latency evaluations, and streaming throughput details will be added as benchmarks finalize.",
+        summary: "Performance metrics and streaming throughput evaluation for the local replay pipeline.",
         metricName: "Streaming Throughput",
         metricDirection: "higher-is-better"
       },
       aiToolsUsage: {
         toolsUsed: "I used language models to review protocol packet framing structures and explore syntax variations for MQTT Python clients.",
-        verificationMethod: "I verified payload validity and broker handshakes with local Wireshark packet captures and dedicated pytest validation suites."
+        verificationMethod: "I checked the dashboard and Power BI totals against the source dataset."
       },
+      lessons: [],
       links: {
-        github: "[ADD]",
-        liveDemo: "[ADD]"
+        github: "",
+        liveDemo: ""
       },
       gallery: [
         {
           id: "sensorstream-fig1",
           title: "Real-time Telemetry Monitor",
           caption: "Figure 1. JavaScript monitoring interface rendering simulated voltage, active power, and sub-metering streams.",
-          altText: "Real-time sensor telemetry dashboard with live line charts and status indicators."
+          altText: "Real-time sensor telemetry dashboard with live line charts and status indicators.",
+          imageUrl: "/images/sensorstream-dashboard.png"
         },
         {
           id: "sensorstream-fig2",
           title: "Power BI Executive Analysis",
           caption: "Figure 2. Power BI analytical view showing peak consumption periods and load distribution summaries.",
-          altText: "Power BI report with power breakdown charts and demand metrics."
+          altText: "Power BI report with power breakdown charts and demand metrics.",
+          imageUrl: "/images/sensorstream-powerbi.png"
         }
       ]
     },
@@ -396,8 +431,10 @@ export const content: PortfolioContent = {
       title: "Banking systems at KaribuTech AI (work case study)",
       tags: ["Backend", "Banking", "Business Analysis", "Testing"],
       summary: "During a nine-month industrial attachment I worked on banking technology for a commercial bank client: a credit-scoring rules API, integrations and business analysis.",
+      role: "Backend developer and digital solutions intern",
+      tools: "Java, Spring Boot, Drools, GraphQL, SharePoint, DocuSign, WhatsApp Cloud API, Figma",
       keyMetric: "200+ test cases validated",
-      status: "Production deployment (client)",
+      status: "Deployed to a test environment",
       featured: true,
       confidentialityNote: "Client details are confidential. No client data is shown.",
       problem: "The commercial bank client relied on complex manual spreadsheet decision tables for credit decisions, creating slow approval cycles and inconsistent validation across loan applications.",
@@ -412,15 +449,15 @@ export const content: PortfolioContent = {
           { id: "node-2", label: "Java Spring Boot API", sublabel: "REST & GraphQL orchestration", category: "api" },
           { id: "node-3", label: "Drools Rules Engine", sublabel: "Credit score matrices & risk gates", category: "model" },
           { id: "node-4", label: "DocuSign & SharePoint", sublabel: "Automated e-signature & file store", category: "process" },
-          { id: "node-5", label: "Bank Core Systems", sublabel: "Secure test environment verification", category: "ui" }
+          { id: "node-5", label: "Test environment", sublabel: "Rules validated with 200+ test cases", category: "ui" }
         ]
       },
       results: {
-        summary: "Validated rule execution with more than 200 automated test cases in the staging environment. Value stream mapping across 12 banking departments uncovered 7 duplicated operational steps, informing executive process improvements.",
+        summary: "Validated rule execution with more than 200 automated test cases in the staging environment. Value stream mapping across 12 banking departments uncovered 7 duplicated operational steps.",
         metricName: "Test Cases Validated",
         table: [
-          { name: "Drools Credit Rules API", primaryScore: "200+ test cases passed", secondaryScore: "100% logic parity with Excel" },
-          { name: "Departmental Value Stream Mapping", primaryScore: "12 departments mapped", secondaryScore: "7 duplicate steps eliminated" },
+          { name: "Drools Credit Rules API", primaryScore: "200+ test cases passed", secondaryScore: "Deployed to a test environment" },
+          { name: "Departmental Value Stream Mapping", primaryScore: "12 departments mapped", secondaryScore: "7 duplicated steps found" },
           { name: "User Research Artifacts", primaryScore: "12 user personas", secondaryScore: "6 customer journey maps" }
         ]
       },
@@ -428,18 +465,23 @@ export const content: PortfolioContent = {
         toolsUsed: "I used developer tooling for generating draft DTO mappings between GraphQL schemas and Java POJO objects.",
         verificationMethod: "I checked all generated POJO properties and Drools decision outputs against formal bank test matrices with manual assertion logs."
       },
+      lessons: [],
       links: {
-        github: "[ADD]",
-        liveDemo: "[ADD]"
+        github: "",
+        liveDemo: ""
       },
-      gallery: [
-        {
-          id: "karibu-fig1",
-          title: "Value Stream Map Diagram (Conceptual)",
-          caption: "Figure 1. Architectural blueprint of credit decision automation and document submission handoffs.",
-          altText: "Process flow diagram showing customer document ingestion, automated rule scoring, and e-signature execution."
-        }
-      ]
+      gallery: []
+    }
+  ],
+
+  moreWork: [
+    {
+      id: "more-1",
+      image: "/images/project-1.jpg"
+    },
+    {
+      id: "more-2",
+      image: "/images/project-2.jpg"
     }
   ],
 
@@ -448,43 +490,37 @@ export const content: PortfolioContent = {
       id: "cred-1",
       title: "Google Data Analytics Professional Certificate",
       issuer: "Google",
-      year: "2024",
-      verifyUrl: "[ADD LINK]"
+      year: "2024"
     },
     {
       id: "cred-2",
       title: "Preparing Data for Analysis with Microsoft Excel",
       issuer: "Microsoft via Coursera",
-      year: "2024",
-      verifyUrl: "[ADD LINK]"
+      year: "2024"
     },
     {
       id: "cred-3",
       title: "Supervised Machine Learning",
       issuer: "DeepLearning.AI and Stanford",
-      year: "2024",
-      verifyUrl: "[ADD LINK]"
+      year: "2024"
     },
     {
       id: "cred-4",
       title: "Learn SQL and Learn Python 3",
       issuer: "Codecademy",
-      year: "2024",
-      verifyUrl: "[ADD LINK]"
+      year: "2024"
     },
     {
       id: "cred-5",
       title: "Data Analytics and Visualization Job Simulation",
       issuer: "Accenture via Forage",
-      year: "2024",
-      verifyUrl: "[ADD LINK]"
+      year: "2024"
     },
     {
       id: "cred-6",
       title: "Data Protection Officer Training",
       issuer: "Alison",
-      year: "2026",
-      verifyUrl: "[ADD LINK]"
+      year: "2026"
     }
   ],
 
@@ -497,7 +533,7 @@ export const content: PortfolioContent = {
   about: {
     paragraphs: [
       "I began my data science training at the University of Zimbabwe, completing a BSc Honours in Data Science and Informatics with Upper Second Class honors. My academic coursework provided a deep mathematical foundation, earning Class 1 results in Applied Statistics, Machine Learning Fundamentals, Deep Learning, Linear Algebra, and Data Structures and Algorithms.",
-      "During my nine-month industrial attachment at KaribuTech AI, I took predictive models and credit rules from design to deployment. I converted complex Excel credit scoring tables into automated Java and Drools rules, built secure APIs for document management, and worked with twelve commercial banking departments to streamline operations.",
+      "During my nine-month industrial attachment at KaribuTech AI, I turned Excel credit-scoring tables into Java and Drools REST API rules, built SharePoint, GraphQL, DocuSign and WhatsApp integrations, and interviewed process owners across 12 bank departments to map how work actually flowed.",
       "I am now based in Al Wakra, Qatar, available immediately for data science and engineering roles. I focus on building reliable systems, from explainable machine learning models to the production APIs and monitoring dashboards that deliver clear value to decision makers."
     ]
   }
