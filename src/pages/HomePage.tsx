@@ -7,11 +7,13 @@ import React from 'react';
 import { content } from '../content.ts';
 import { ProjectCard } from '../components/ProjectCard.tsx';
 import { VisualSlot, ResultsMiniChart } from '../components/VisualSlot.tsx';
+import { usePictureSlot } from '../utils/pictureStore.ts';
 import { ArrowRight, FileText, Mail, Linkedin } from 'lucide-react';
 
 export function HomePage() {
   const featuredProjects = content.projects.filter((p) => p.featured);
   const hasCv = Boolean(content.profile.cvUrl && content.profile.cvUrl.trim());
+  const { effectiveUrl: heroPhotoUrl } = usePictureSlot('hero-photo', content.profile.photoUrl);
 
   return (
     <div className="space-y-16 lg:space-y-24">
@@ -20,17 +22,19 @@ export function HomePage() {
       <section className="pt-8 sm:pt-14 pb-8 border-b border-[#E4E2DC] dark:border-[#2E332E]" aria-labelledby="hero-title">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
-          {/* Mobile Profile Photo / Monogram (above name on mobile, hidden on lg+) */}
-          <div className="lg:hidden w-36 h-36 border border-[#E4E2DC] dark:border-[#2E332E]">
-            <VisualSlot
-              slotId="hero-photo"
-              imageUrl={content.profile.photoUrl}
-              altText={content.profile.photoAlt}
-              fallbackType="profileMonogram"
-              aspectRatio="1:1"
-              enableLightbox={true}
-            />
-          </div>
+          {/* Mobile Profile Photo (below lg): shown ONLY if a real photo exists (96x96px square above name); otherwise hidden */}
+          {heroPhotoUrl && (
+            <div className="lg:hidden w-24 h-24 border border-[#E4E2DC] dark:border-[#2E332E] overflow-hidden">
+              <VisualSlot
+                slotId="hero-photo"
+                imageUrl={content.profile.photoUrl}
+                altText={content.profile.photoAlt}
+                fallbackType="profileMonogram"
+                aspectRatio="1:1"
+                enableLightbox={true}
+              />
+            </div>
+          )}
 
           {/* Left Column: Typographic Content (7/12 on lg) */}
           <div className="lg:col-span-7 space-y-6">

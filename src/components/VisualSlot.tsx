@@ -98,7 +98,7 @@ export function ResultsMiniChart({ variant = 'compact' }: { variant?: 'compact' 
         </div>
 
         {/* Footnote link */}
-        <div className="pt-2 border-t border-[#E4E2DC] dark:border-[#2E332E] text-[12px] font-mono text-[#0B5A4D] dark:text-[#3FB59B] font-semibold">
+        <div className="pt-2 border-t border-[#E4E2DC] dark:border-[#2E332E] text-[12px] font-mono text-[#0B5A4D] dark:text-[#3FB59B] font-semibold shrink-0 leading-tight">
           Full results in the case study →
         </div>
       </div>
@@ -170,28 +170,28 @@ export function PipelineDiagram({
 
   if (variant === 'compact') {
     return (
-      <div className="w-full h-full p-4 sm:p-5 bg-[#F8F7F3] dark:bg-[#151815] border border-[#E4E2DC] dark:border-[#2E332E] flex flex-col justify-between select-none">
-        <div className="text-[14px] font-serif font-bold text-[#1B1B1B] dark:text-[#ECEBE6] leading-tight">
+      <div className="w-full h-full p-3 sm:p-4 bg-[#F8F7F3] dark:bg-[#151815] border border-[#E4E2DC] dark:border-[#2E332E] flex flex-col justify-between select-none">
+        <div className="text-[13px] sm:text-[14px] font-serif font-bold text-[#1B1B1B] dark:text-[#ECEBE6] leading-tight shrink-0">
           System Architecture Pipeline
         </div>
 
         {/* 5 steps with numbers and short labels only */}
-        <div className="flex flex-col justify-between gap-1.5 flex-1 my-2">
+        <div className="flex flex-col justify-between gap-1 flex-1 my-1.5 min-h-0">
           {nodes.map((node, i) => (
             <div
               key={node.id}
-              className="flex items-center justify-between gap-2 px-3 py-1 bg-[#FFFFFF] dark:bg-[#1C201C] border border-[#E4E2DC] dark:border-[#2E332E]"
+              className="flex items-center justify-between gap-1.5 px-2.5 py-0.5 bg-[#FFFFFF] dark:bg-[#1C201C] border border-[#E4E2DC] dark:border-[#2E332E] leading-snug"
             >
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="font-mono text-[12px] font-semibold text-[#0B5A4D] dark:text-[#3FB59B] tracking-[0.06em]">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="font-mono text-[12px] font-semibold text-[#0B5A4D] dark:text-[#3FB59B] tracking-[0.06em] shrink-0">
                   0{i + 1}.
                 </span>
-                <span className="font-sans text-[13px] font-semibold text-[#1B1B1B] dark:text-[#ECEBE6] truncate">
+                <span className="font-sans text-[12px] sm:text-[13px] font-semibold text-[#1B1B1B] dark:text-[#ECEBE6] truncate">
                   {node.label}
                 </span>
               </div>
               {i < nodes.length - 1 && (
-                <span className="text-[12px] text-[#0B5A4D] dark:text-[#3FB59B] font-bold shrink-0" aria-hidden="true">
+                <span className="text-[12px] text-[#0B5A4D] dark:text-[#3FB59B] font-bold shrink-0 leading-none" aria-hidden="true">
                   ↓
                 </span>
               )}
@@ -199,8 +199,8 @@ export function PipelineDiagram({
           ))}
         </div>
 
-        <div className="pt-2 border-t border-[#E4E2DC] dark:border-[#2E332E] text-[12px] font-mono text-[#4A4A45] dark:text-[#B4B3AC]">
-          5-stage telemetry & inference pipeline
+        <div className="pt-1.5 border-t border-[#E4E2DC] dark:border-[#2E332E] text-[12px] font-mono text-[#4A4A45] dark:text-[#B4B3AC] shrink-0 leading-tight">
+          5-stage data pipeline
         </div>
       </div>
     );
@@ -447,7 +447,7 @@ export function ProofTiles({ variant = 'compact' }: { variant?: 'compact' | 'ful
           ))}
         </div>
 
-        <div className="pt-2 border-t border-[#E4E2DC] dark:border-[#2E332E] text-[12px] font-mono text-[#4A4A45] dark:text-[#B4B3AC]">
+        <div className="pt-2 border-t border-[#E4E2DC] dark:border-[#2E332E] text-[12px] font-mono text-[#4A4A45] dark:text-[#B4B3AC] shrink-0 leading-tight">
           Confirmed figures from the attachment
         </div>
       </div>
@@ -494,25 +494,20 @@ export function ProofTiles({ variant = 'compact' }: { variant?: 'compact' | 'ful
 }
 
 /**
- * 3f. ProfileMonogram: initials "KJC" in serif font on hairline-bordered square
- * with identity line underneath. Rendered in HTML for sharp readability.
+ * 3f. ProfileMonogram:
+ * Shows only "KJC", the line, and "Al Wakra, Qatar" (no repeated full name or identity line),
+ * so nothing can be squeezed.
  */
 export function ProfileMonogram({ className = '' }: { className?: string }) {
   return (
-    <div className={`relative w-full aspect-square overflow-hidden bg-[#F4F3EE] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#2E332E] p-4 sm:p-6 flex flex-col items-center justify-center text-center select-none ${className}`}>
+    <div className={`relative w-full aspect-square overflow-hidden bg-[#F4F3EE] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#2E332E] p-6 sm:p-8 flex flex-col items-center justify-center text-center select-none ${className}`}>
       {/* Hairline inner square */}
-      <div className="w-full h-full border border-[#E4E2DC]/80 dark:border-[#2E332E]/80 flex flex-col items-center justify-center p-4 space-y-2">
-        <div className="font-serif text-5xl sm:text-6xl font-bold text-[#0B5A4D] dark:text-[#3FB59B] tracking-wider">
+      <div className="w-full h-full border border-[#E4E2DC]/80 dark:border-[#2E332E]/80 flex flex-col items-center justify-center p-6 space-y-4">
+        <div className="font-serif text-5xl sm:text-6xl lg:text-7xl font-bold text-[#0B5A4D] dark:text-[#3FB59B] tracking-wider">
           KJC
         </div>
-        <div className="w-20 h-px bg-[#0B5A4D]/60 dark:bg-[#3FB59B]/60" />
-        <div className="font-serif text-[15px] sm:text-[17px] font-bold text-[#1B1B1B] dark:text-[#ECEBE6]">
-          {content.profile.fullName}
-        </div>
-        <div className="font-mono text-[12px] sm:text-[13px] uppercase tracking-[0.06em] text-[#0B5A4D] dark:text-[#3FB59B] font-semibold">
-          {content.profile.identityLine}
-        </div>
-        <div className="font-mono text-[12px] sm:text-[13px] text-[#4A4A45] dark:text-[#B4B3AC]">
+        <div className="w-16 sm:w-24 h-px bg-[#0B5A4D]/60 dark:bg-[#3FB59B]/60" />
+        <div className="font-mono text-[13px] sm:text-[14px] text-[#4A4A45] dark:text-[#B4B3AC]">
           {content.profile.location}
         </div>
       </div>
