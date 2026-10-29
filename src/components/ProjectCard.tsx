@@ -28,6 +28,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           altText={project.title}
           fallbackType={project.fallbackType}
           projectSlug={project.slug}
+          variant="compact"
           objectFit="cover"
         />
       </div>

@@ -142,7 +142,7 @@ export function HomePage() {
                 </span>
               </div>
               <div className="aspect-[16/10] w-full">
-                <ResultsMiniChart />
+                <ResultsMiniChart variant="compact" />
               </div>
             </div>
           </div>

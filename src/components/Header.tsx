@@ -26,14 +26,16 @@ export function Header({ currentPath }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 w-full bg-[#FAFAF7]/90 dark:bg-[#121412]/90 backdrop-blur-md border-b border-[#E4E2DC] dark:border-[#2E332E] transition-colors">
       <div className="max-w-7xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-6 h-20">
+        <div className="flex items-center justify-between gap-3 sm:gap-6 h-20 min-w-0">
           
-          {/* Brand title, single line text */}
+          {/* Brand title: short name below sm (640px), full name from sm up; min-w-0 truncate as last resort */}
           <a
             href="#/"
-            className="text-lg sm:text-xl font-serif font-bold tracking-tight text-[#1B1B1B] dark:text-[#ECEBE6] hover:text-[#0B5A4D] dark:hover:text-[#3FB59B] transition-colors whitespace-nowrap shrink-0 focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
+            className="text-lg sm:text-xl font-serif font-bold tracking-tight text-[#1B1B1B] dark:text-[#ECEBE6] hover:text-[#0B5A4D] dark:hover:text-[#3FB59B] transition-colors min-w-0 truncate focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
+            title={content.profile.fullName}
           >
-            {content.profile.fullName}
+            <span className="sm:hidden">K. J. Chawatama</span>
+            <span className="hidden sm:inline">{content.profile.fullName}</span>
           </a>
 
           {/* Full navigation from lg breakpoint up; active link is underlined */}
@@ -57,13 +59,13 @@ export function Header({ currentPath }: HeaderProps) {
             })}
           </nav>
 
-          {/* Right controls: Theme toggle icon button + Email link (minimum 44px tap targets) */}
-          <div className="flex items-center gap-3 shrink-0">
-            {/* Theme toggle rendered as an icon button with min 44px tap target */}
+          {/* Right controls: Theme toggle + Email link (lg+) + Mobile menu trigger (both 44x44px, shrink-0, always fully visible) */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Theme toggle rendered as an icon button: exactly 44x44px */}
             <button
               type="button"
               onClick={toggleTheme}
-              className="min-h-[44px] min-w-[44px] p-2.5 border border-[#E4E2DC] dark:border-[#2E332E] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] text-[#4A4A45] dark:text-[#B4B3AC] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] transition-colors cursor-pointer flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
+              className="w-11 h-11 shrink-0 p-2.5 border border-[#E4E2DC] dark:border-[#2E332E] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] text-[#4A4A45] dark:text-[#B4B3AC] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] transition-colors cursor-pointer flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
               aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
             >
@@ -74,18 +76,19 @@ export function Header({ currentPath }: HeaderProps) {
               )}
             </button>
 
+            {/* Email me button: hidden below lg breakpoint (available inside mobile drawer), shown from lg up */}
             <a
               href={`mailto:${content.profile.email}`}
-              className="hidden sm:inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 text-[15px] font-medium text-[#FAFAF7] bg-[#0B5A4D] hover:bg-[#08453B] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
+              className="hidden lg:inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 text-[15px] font-medium text-[#FAFAF7] bg-[#0B5A4D] hover:bg-[#08453B] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
             >
               Email me
             </a>
 
-            {/* Mobile menu trigger below lg breakpoint */}
+            {/* Mobile menu trigger below lg: exactly 44x44px, shrink-0, never pushed off screen */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden min-h-[44px] min-w-[44px] p-2.5 text-[#4A4A45] dark:text-[#B4B3AC] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] border border-[#E4E2DC] dark:border-[#2E332E] transition-colors cursor-pointer flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
+              className="lg:hidden w-11 h-11 shrink-0 p-2.5 text-[#4A4A45] dark:text-[#B4B3AC] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] border border-[#E4E2DC] dark:border-[#2E332E] transition-colors cursor-pointer flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
               aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileMenuOpen}
             >

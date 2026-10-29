@@ -361,6 +361,7 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
                       altText={item.altText}
                       fallbackType={item.fallbackType}
                       projectSlug={project.slug}
+                      variant="full"
                       aspectRatio="16:10"
                       objectFit="contain"
                       enableLightbox={true}
