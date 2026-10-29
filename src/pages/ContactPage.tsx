@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { content } from '../content.ts';
-import { Mail, Phone, Linkedin, Github, MapPin, Send, Copy, Check } from 'lucide-react';
+import { Mail, Phone, Linkedin, Github, MapPin, Send, Copy, Check, Clock } from 'lucide-react';
 
 export function ContactPage() {
   const [formData, setFormData] = useState({
@@ -53,9 +53,17 @@ export function ContactPage() {
           Contact Kuzivakwashe Joshua Chawatama
         </h1>
 
-        <p className="text-base text-[#5A5A55] dark:text-[#9E9D96] max-w-[68ch]">
-          Based in Al Wakra, Qatar. Available immediately for data science, machine learning, and backend engineering positions.
-        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 max-w-[68ch]">
+          <p className="text-base text-[#5A5A55] dark:text-[#9E9D96]">
+            Based in Al Wakra, Qatar. Available immediately for data science, machine learning, and backend engineering positions.
+          </p>
+        </div>
+
+        {/* Response time note */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#F4F3EE] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] text-xs font-mono text-[#0E6B5C] dark:text-[#3FB59B]">
+          <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+          <span>Response time: Usually within 24 hours</span>
+        </div>
       </section>
 
       {/* Grid: Direct Contact Details & Mailto Form */}

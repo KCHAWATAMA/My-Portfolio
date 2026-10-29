@@ -6,6 +6,7 @@
 import React, { useState, useMemo } from 'react';
 import { content, MoreWorkItem } from '../content.ts';
 import { ProjectCard } from '../components/ProjectCard.tsx';
+import { VisualSlot } from '../components/VisualSlot.tsx';
 import { Filter, RefreshCcw, ExternalLink } from 'lucide-react';
 
 export function ProjectsPage() {
@@ -119,7 +120,7 @@ export function ProjectsPage() {
               className="flex items-center gap-1 text-[#0E6B5C] dark:text-[#3FB59B] hover:underline cursor-pointer"
             >
               <RefreshCcw className="w-3 h-3" aria-hidden="true" />
-              <span>Reset filters</span>
+              <span>Clear filters</span>
             </button>
           )}
         </div>
@@ -128,23 +129,23 @@ export function ProjectsPage() {
       {/* Projects Grid or Empty State */}
       <section aria-label="Projects list">
         {filteredProjects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
             {filteredProjects.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
           </div>
         ) : (
-          /* Proper Empty State */
+          /* Proper Empty State: No projects match. Clear filters. */
           <div className="p-12 text-center bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] space-y-4">
             <span className="font-mono text-xs text-[#0E6B5C] dark:text-[#3FB59B] uppercase tracking-wider block">
               No matching records
             </span>
             <h2 className="font-serif text-xl font-semibold text-[#1B1B1B] dark:text-[#ECEBE6]">
-              No projects found for current filter criteria
+              No projects match. Clear filters.
             </h2>
             <p className="text-sm text-[#5A5A55] dark:text-[#9E9D96] max-w-md mx-auto">
               There are no projects tagged with &ldquo;{selectedTag}&rdquo;
-              {searchQuery && ` matching &ldquo;${searchQuery}&rdquo;`}. Try selecting &ldquo;All&rdquo; or clearing search.
+              {searchQuery && ` matching &ldquo;${searchQuery}&rdquo;`}. Try clearing search or selecting &ldquo;All&rdquo;.
             </p>
             <div className="pt-2">
               <button
@@ -152,7 +153,7 @@ export function ProjectsPage() {
                 onClick={handleReset}
                 className="px-4 py-2 text-xs font-medium text-[#FAFAF7] bg-[#0E6B5C] dark:bg-[#3FB59B] dark:text-[#121412] hover:bg-[#0A4F44] dark:hover:bg-[#4FD3B6] transition-colors cursor-pointer"
               >
-                Clear all filters
+                Clear filters
               </button>
             </div>
           </div>
@@ -176,26 +177,21 @@ export function ProjectsPage() {
               const hasSummary = Boolean(item.summary && item.summary.trim() && item.summary !== '[ ]');
               const hasTools = Boolean(item.tools && item.tools.length > 0);
               const hasLink = Boolean(item.link && item.link.trim() && item.link !== '[ ]' && item.link !== '[ADD LINK]');
-              const hasImage = Boolean(item.image && item.image.trim());
 
               return (
                 <article
                   key={item.id}
                   className="bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] flex flex-col justify-between overflow-hidden"
                 >
-                  {/* Optional image (fixed 16:10 frame, object-cover) */}
-                  {hasImage && (
-                    <div className="w-full aspect-[16/10] bg-[#F4F3EE] dark:bg-[#121412] border-b border-[#E4E2DC] dark:border-[#272B27] overflow-hidden">
-                      <img
-                        src={item.image}
-                        alt={hasTitle ? (item.title as string) : "Project preview"}
-                        width={1600}
-                        height={1000}
-                        loading="lazy"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
+                  {/* Fixed 16:10 Visual Slot (real image if provided, otherwise theme-aware SVG) */}
+                  <div className="w-full aspect-[16/10] bg-[#F4F3EE] dark:bg-[#121412] border-b border-[#E4E2DC] dark:border-[#272B27] overflow-hidden">
+                    <VisualSlot
+                      imageUrl={item.image}
+                      altText={hasTitle ? (item.title as string) : "Project specification blueprint"}
+                      fallbackType="moreWorkSketch"
+                      objectFit="cover"
+                    />
+                  </div>
 
                   {/* Body - only render fields that exist */}
                   {(hasTitle || hasYear || hasSummary || hasTools || hasLink) && (

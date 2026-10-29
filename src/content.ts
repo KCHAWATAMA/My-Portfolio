@@ -22,6 +22,7 @@ export interface Profile {
   phone: string;
   linkedin: string;
   github: string;
+  cvUrl: string;
   downloadCvUrl: string;
   photoUrl: string;
   photoAlt: string;
@@ -68,16 +69,19 @@ export interface ArchitectureNode {
 
 export interface GalleryItem {
   id: string;
+  slotId: string;
   title: string;
   caption: string;
   altText: string;
   imageUrl?: string;
+  fallbackType: 'resultsMiniChart' | 'pipelineDiagram' | 'explainability' | 'dashboardSketch' | 'proofTiles';
 }
 
 export interface ProjectResults {
   summary: string;
   metricName?: string;
   metricDirection?: 'lower-is-better' | 'higher-is-better';
+  comparisonNote?: string;
   chart?: {
     title: string;
     description: string;
@@ -95,15 +99,18 @@ export interface ProjectResults {
 export interface Project {
   id: string;
   slug: string;
+  cardSlotId: string;
   title: string;
   tags: string[];
   summary: string;
+  readingTime: string;
   role: string;
   tools: string;
   keyMetric?: string;
   status: string;
   featured: boolean;
   imageUrl?: string;
+  fallbackType: 'resultsMiniChart' | 'pipelineDiagram' | 'explainability' | 'dashboardSketch' | 'proofTiles';
   confidentialityNote?: string;
   simulationLabel?: string;
   problem: string;
@@ -121,6 +128,7 @@ export interface Project {
     verificationMethod: string;
   };
   lessons?: string[];
+  nextSteps?: string;
   links: {
     github?: string;
     liveDemo?: string;
@@ -156,6 +164,7 @@ export interface AboutContent {
 }
 
 export interface PortfolioContent {
+  lastUpdated: string;
   profile: Profile;
   navLinks: NavLink[];
   skills: SkillCategory[];
@@ -169,6 +178,7 @@ export interface PortfolioContent {
 }
 
 export const content: PortfolioContent = {
+  lastUpdated: "October 2026",
   profile: {
     fullName: "Kuzivakwashe Joshua Chawatama",
     identityLine: "Data scientist who builds and ships.",
@@ -184,8 +194,9 @@ export const content: PortfolioContent = {
     phone: "+974 6652 7520",
     linkedin: "https://www.linkedin.com/in/kuzivakwashej",
     github: "https://github.com/KCHAWATAMA",
-    downloadCvUrl: "/cv/Kuzivakwashe-Chawatama-CV.pdf",
-    photoUrl: "/images/profile.jpg",
+    cvUrl: "",
+    downloadCvUrl: "",
+    photoUrl: "",
     photoAlt: "Kuzivakwashe Joshua Chawatama, Data Scientist and Engineer",
     currently: {
       learning: ["Microsoft PL-300 (Power BI)", "AZ-900 (Azure)", "Tableau"],
@@ -290,15 +301,18 @@ export const content: PortfolioContent = {
     {
       id: "aerotwin",
       slug: "aerotwin",
+      cardSlotId: "aerotwin-card",
       title: "AeroTwin: explainable predictive maintenance for aircraft engines",
       tags: ["Machine Learning", "Explainable AI", "Full Stack"],
       summary: "Predicts the remaining useful life of turbofan engines from NASA C-MAPSS sensor data and explains each prediction, inside a digital twin dashboard.",
+      readingTime: "4 min read",
       role: "Sole developer (final-year project)",
       tools: "Python, TensorFlow, XGBoost, SHAP, LIME, FastAPI, Next.js",
       keyMetric: "RMSE 14.00 (R² 0.878)",
       status: "In progress (deployment)",
       featured: true,
-      imageUrl: "/images/aerotwin-dashboard.png",
+      imageUrl: "",
+      fallbackType: "resultsMiniChart",
       problem: "Unplanned engine maintenance is costly and disruptive. Planners need predictions they can trust and understand.",
       whatIBuilt: "An LSTM model blended with XGBoost, served by a FastAPI backend with SHAP, LIME and counterfactual explanations and Monte Carlo uncertainty, and a Next.js dashboard with CSV import and a 3D engine view.",
       data: "NASA C-MAPSS FD001 (public). 30-cycle windows, 17 input features, remaining life capped at 125 cycles, engine-wise splits.",
@@ -318,8 +332,9 @@ export const content: PortfolioContent = {
         summary: "Official test set RMSE evaluation on NASA C-MAPSS FD001. Lower RMSE indicates superior remaining useful life prediction accuracy. The hybrid model achieved the lowest test RMSE of 14.00 and an R squared score of 0.878.",
         metricName: "Test RMSE (Lower is better)",
         metricDirection: "lower-is-better",
+        comparisonNote: "The hybrid model is 3% more accurate than XGBoost and 32% more accurate than the CNN.",
         chart: {
-          title: "NASA C-MAPSS FD001 Test Set RMSE Comparison",
+          title: "Prediction error by model (lower is better)",
           description: "Benchmark comparison across six evaluated model architectures on the official test set. Lower is better.",
           metricLabel: "RMSE",
           data: [
@@ -345,6 +360,7 @@ export const content: PortfolioContent = {
         verificationMethod: "I checked model outputs against the official NASA test set and wrote a pytest suite for the data pipeline, inference, explanations and digital twin endpoints."
       },
       lessons: [],
+      nextSteps: "Finalizing cloud container deployment for the FastAPI service and linking live interactive inference to the digital twin dashboard.",
       links: {
         github: "https://github.com/KCHAWATAMA/aircraft-engine-predictive-maintenance",
         liveDemo: ""
@@ -352,32 +368,39 @@ export const content: PortfolioContent = {
       gallery: [
         {
           id: "aerotwin-fig1",
-          title: "Digital Twin Engine Dashboard",
-          caption: "Figure 1. Digital twin interface showing remaining useful life estimates, confidence interval, and sensor telemetry feed.",
-          altText: "Digital twin dashboard with turbofan sensor indicators and remaining useful life gauge.",
-          imageUrl: "/images/aerotwin-dashboard.png"
+          slotId: "aerotwin-fig-1",
+          title: "System Pipeline Architecture",
+          caption: "Figure 1. End-to-end processing pipeline from NASA C-MAPSS sensor ingestion to hybrid inference and digital twin view.",
+          altText: "System pipeline diagram from sensor data to digital twin dashboard.",
+          imageUrl: "",
+          fallbackType: "pipelineDiagram"
         },
         {
           id: "aerotwin-fig2",
-          title: "SHAP and Counterfactual Explanation Panel",
-          caption: "Figure 2. Feature attribution waterfall chart detailing which sensor anomalies drove the predicted maintenance deadline.",
-          altText: "SHAP explanation plot highlighting sensor contributions to engine degradation score.",
-          imageUrl: "/images/aerotwin-shap.png"
+          slotId: "aerotwin-fig-2",
+          title: "Multi-Method Explainability Framework",
+          caption: "Figure 2. Explainability framework connecting predictions with SHAP, LIME, counterfactuals, and Monte Carlo uncertainty.",
+          altText: "Explainability architecture diagram linking prediction to explanation methods.",
+          imageUrl: "",
+          fallbackType: "explainability"
         }
       ]
     },
     {
       id: "sensorstream",
       slug: "sensorstream",
+      cardSlotId: "sensorstream-card",
       title: "SensorStream Analytics",
       tags: ["Data Engineering", "IoT Simulation", "Dashboards"],
       summary: "A local prototype that replays the UCI household electricity dataset through simulated Modbus and MQTT, processes it in Python, and shows it on a JavaScript monitoring dashboard and in Power BI reports.",
+      readingTime: "3 min read",
       role: "Sole developer (independent project)",
       tools: "Python, MQTT, Modbus, JavaScript, Power BI",
       keyMetric: "",
       status: "Completed Prototype",
       featured: true,
-      imageUrl: "/images/sensorstream-dashboard.png",
+      imageUrl: "",
+      fallbackType: "pipelineDiagram",
       simulationLabel: "Simulation using public data",
       problem: "Industrial IoT teams require lightweight ways to test telemetry pipelines and power consumption monitors before hardware is connected in the field.",
       whatIBuilt: "A local data engineering pipeline simulating industrial sensor networks using Modbus and MQTT protocols, Python stream transformation workers, an interactive JavaScript dashboard, and synchronized Power BI analytical reports.",
@@ -404,6 +427,7 @@ export const content: PortfolioContent = {
         verificationMethod: "I checked the dashboard and Power BI totals against the source dataset."
       },
       lessons: [],
+      nextSteps: "Extending the broker configuration to evaluate Kafka connector scaling under multi-tenant industrial telemetry scenarios.",
       links: {
         github: "",
         liveDemo: ""
@@ -411,31 +435,39 @@ export const content: PortfolioContent = {
       gallery: [
         {
           id: "sensorstream-fig1",
-          title: "Real-time Telemetry Monitor",
-          caption: "Figure 1. JavaScript monitoring interface rendering simulated voltage, active power, and sub-metering streams.",
-          altText: "Real-time sensor telemetry dashboard with live line charts and status indicators.",
-          imageUrl: "/images/sensorstream-dashboard.png"
+          slotId: "sensorstream-fig-1",
+          title: "Streaming Architecture Pipeline",
+          caption: "Figure 1. End-to-end data pipeline from UCI replay to protocol brokers and dashboards.",
+          altText: "Streaming data pipeline diagram.",
+          imageUrl: "",
+          fallbackType: "pipelineDiagram"
         },
         {
           id: "sensorstream-fig2",
-          title: "Power BI Executive Analysis",
-          caption: "Figure 2. Power BI analytical view showing peak consumption periods and load distribution summaries.",
-          altText: "Power BI report with power breakdown charts and demand metrics.",
-          imageUrl: "/images/sensorstream-powerbi.png"
+          slotId: "sensorstream-fig-2",
+          title: "Monitoring Dashboard Wireframe",
+          caption: "Figure 2. Dashboard layout wireframe depicting key power and communication telemetry panels.",
+          altText: "Dashboard layout wireframe with active power, voltage, sub-metering, and MQTT panels.",
+          imageUrl: "",
+          fallbackType: "dashboardSketch"
         }
       ]
     },
     {
       id: "kaributech-banking",
       slug: "kaributech-banking",
+      cardSlotId: "kaributech-card",
       title: "Banking systems at KaribuTech AI (work case study)",
       tags: ["Backend", "Banking", "Business Analysis", "Testing"],
       summary: "During a nine-month industrial attachment I worked on banking technology for a commercial bank client: a credit-scoring rules API, integrations and business analysis.",
+      readingTime: "5 min read",
       role: "Backend developer and digital solutions intern",
       tools: "Java, Spring Boot, Drools, GraphQL, SharePoint, DocuSign, WhatsApp Cloud API, Figma",
       keyMetric: "200+ test cases validated",
       status: "Deployed to a test environment",
       featured: true,
+      imageUrl: "",
+      fallbackType: "proofTiles",
       confidentialityNote: "Client details are confidential. No client data is shown.",
       problem: "The commercial bank client relied on complex manual spreadsheet decision tables for credit decisions, creating slow approval cycles and inconsistent validation across loan applications.",
       whatIBuilt: "Turned Excel credit-scoring decision tables into Java and Drools REST API rules and validated them with more than 200 test cases (deployed to a test environment). Built SharePoint file management and GraphQL APIs, a DocuSign signing integration and a Python WhatsApp file submission workflow on the Meta WhatsApp Cloud API. Interviewed process owners across 12 bank departments for value stream maps that found 7 duplicated process steps, and created 12 user personas and 6 customer journey maps.",
@@ -466,22 +498,33 @@ export const content: PortfolioContent = {
         verificationMethod: "I checked all generated POJO properties and Drools decision outputs against formal bank test matrices with manual assertion logs."
       },
       lessons: [],
+      nextSteps: "Supporting documentation handoff and technical knowledge transfer for bank internal engineering maintainers.",
       links: {
         github: "",
         liveDemo: ""
       },
-      gallery: []
+      gallery: [
+        {
+          id: "karibu-fig1",
+          slotId: "kaributech-fig-1",
+          title: "System Integration Pipeline",
+          caption: "Figure 1. Integration flow connecting customer ingestion channels to Drools credit scoring and bank test environment.",
+          altText: "Banking integration pipeline diagram.",
+          imageUrl: "",
+          fallbackType: "pipelineDiagram"
+        }
+      ]
     }
   ],
 
   moreWork: [
     {
       id: "more-1",
-      image: "/images/project-1.jpg"
+      image: ""
     },
     {
       id: "more-2",
-      image: "/images/project-2.jpg"
+      image: ""
     }
   ],
 

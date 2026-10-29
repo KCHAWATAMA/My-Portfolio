@@ -25,10 +25,10 @@ export function Header({ currentPath }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-[#FAFAF7]/95 dark:bg-[#121412]/95 backdrop-blur-xs border-b border-[#E4E2DC] dark:border-[#272B27] transition-colors">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-6 h-18">
           
-          {/* Zone 1: Brand title, single line text */}
+          {/* Brand title, single line text */}
           <a
             href="#/"
             className="text-base sm:text-lg font-serif font-semibold tracking-tight text-[#1B1B1B] dark:text-[#ECEBE6] hover:text-[#0E6B5C] dark:hover:text-[#3FB59B] transition-colors whitespace-nowrap shrink-0"
@@ -36,8 +36,8 @@ export function Header({ currentPath }: HeaderProps) {
             {content.profile.fullName}
           </a>
 
-          {/* Zone 2: 4-5 nav links, 1-2 word labels, single line */}
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-[#5A5A55] dark:text-[#9E9D96]" aria-label="Main navigation">
+          {/* Full navigation from lg breakpoint up */}
+          <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-[#5A5A55] dark:text-[#9E9D96]" aria-label="Main navigation">
             {content.navLinks.map((link) => {
               const active = isActive(link.href);
               return (
@@ -60,25 +60,20 @@ export function Header({ currentPath }: HeaderProps) {
             })}
           </nav>
 
-          {/* Zone 3: 1 primary action + theme toggle */}
+          {/* Right controls: Theme toggle icon button + Email link */}
           <div className="flex items-center gap-3 shrink-0">
+            {/* Theme toggle rendered as an icon button with clear aria-label */}
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-[#5A5A55] dark:text-[#9E9D96] border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] transition-colors cursor-pointer"
+              className="p-2 border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] text-[#5A5A55] dark:text-[#9E9D96] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] transition-colors cursor-pointer"
               aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
             >
               {theme === 'light' ? (
-                <>
-                  <Moon className="w-3.5 h-3.5 text-[#5A5A55]" aria-hidden="true" />
-                  <span className="hidden sm:inline">Theme: Dark</span>
-                </>
+                <Moon className="w-4 h-4 text-[#5A5A55]" aria-hidden="true" />
               ) : (
-                <>
-                  <Sun className="w-3.5 h-3.5 text-[#ECEBE6]" aria-hidden="true" />
-                  <span className="hidden sm:inline">Theme: Light</span>
-                </>
+                <Sun className="w-4 h-4 text-[#ECEBE6]" aria-hidden="true" />
               )}
             </button>
 
@@ -89,11 +84,11 @@ export function Header({ currentPath }: HeaderProps) {
               Email me
             </a>
 
-            {/* Mobile menu trigger */}
+            {/* Mobile menu trigger below lg breakpoint */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-[#5A5A55] dark:text-[#9E9D96] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] border border-[#E4E2DC] dark:border-[#272B27] transition-colors"
+              className="lg:hidden p-2 text-[#5A5A55] dark:text-[#9E9D96] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] border border-[#E4E2DC] dark:border-[#272B27] transition-colors cursor-pointer"
               aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileMenuOpen}
             >
@@ -106,9 +101,9 @@ export function Header({ currentPath }: HeaderProps) {
           </div>
         </div>
 
-        {/* Mobile dropdown drawer */}
+        {/* Mobile dropdown drawer below lg */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-[#E4E2DC] dark:border-[#272B27]">
+          <div className="lg:hidden py-4 border-t border-[#E4E2DC] dark:border-[#272B27]">
             <nav className="flex flex-col space-y-3" aria-label="Mobile navigation">
               {content.navLinks.map((link) => {
                 const active = isActive(link.href);

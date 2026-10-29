@@ -26,8 +26,18 @@ export function ResultsChart({ results }: ResultsChartProps) {
   }
 
   const chart = results.chart;
-  const maxValue = chart
-    ? Math.max(...chart.data.map((d) => d.value)) * 1.15
+  // Sort data so best model is first
+  const sortedChartData = chart?.data
+    ? [...chart.data].sort((a, b) => {
+        if (results.metricDirection === 'lower-is-better') {
+          return a.value - b.value;
+        }
+        return b.value - a.value;
+      })
+    : [];
+
+  const maxValue = sortedChartData.length > 0
+    ? Math.max(...sortedChartData.map((d) => d.value)) * 1.15
     : 100;
 
   return (
@@ -40,7 +50,7 @@ export function ResultsChart({ results }: ResultsChartProps) {
             Empirical Results
           </span>
           <h4 className="font-serif text-lg font-semibold text-[#1B1B1B] dark:text-[#ECEBE6]">
-            {chart?.title || 'Evaluation Benchmark'}
+            {chart?.title || 'Prediction error by model (lower is better)'}
           </h4>
         </div>
 
@@ -94,19 +104,19 @@ export function ResultsChart({ results }: ResultsChartProps) {
         )}
       </div>
 
-      {/* Interactive Bar Chart */}
+      {/* Interactive Bar Chart (F24 specifications) */}
       {chart && (viewMode === 'both' || viewMode === 'chart') && (
         <div className="space-y-4 pt-2">
           <div className="flex items-center justify-between text-xs text-[#5A5A55] dark:text-[#9E9D96] font-mono border-b border-[#E4E2DC] dark:border-[#272B27] pb-2">
             <span>Model Architecture</span>
-            <span>{chart.metricLabel} (Test Set)</span>
+            <span>{chart.metricLabel} (Test Set, scale from 0)</span>
           </div>
 
           <div className="space-y-3.5" role="region" aria-label={chart.title}>
-            {chart.data.map((item, index) => {
+            {sortedChartData.map((item, index) => {
               const widthPct = Math.round((item.value / maxValue) * 100);
               const isHovered = hoveredIndex === index;
-              const isTop = item.highlight;
+              const isTop = item.highlight || index === 0;
 
               return (
                 <div
@@ -129,7 +139,7 @@ export function ResultsChart({ results }: ResultsChartProps) {
                     </span>
                   </div>
 
-                  {/* Accessible bar container */}
+                  {/* Accessible bar container starting from 0 */}
                   <div
                     className="h-6 w-full bg-[#F4F3EE] dark:bg-[#121412] border border-[#E4E2DC] dark:border-[#272B27] p-0.5 flex items-center"
                     role="progressbar"
@@ -139,7 +149,7 @@ export function ResultsChart({ results }: ResultsChartProps) {
                     aria-label={`${item.label}: ${item.value} ${chart.metricLabel}`}
                   >
                     <div
-                      className={`h-full transition-all duration-300 ${
+                      className={`h-full motion-safe:transition-all motion-safe:duration-300 motion-reduce:transition-none ${
                         isTop
                           ? 'bg-[#0E6B5C] dark:bg-[#3FB59B]'
                           : isHovered
@@ -154,8 +164,14 @@ export function ResultsChart({ results }: ResultsChartProps) {
             })}
           </div>
 
-          <div className="text-[11px] font-mono text-[#5A5A55] dark:text-[#9E9D96] pt-2">
-            Figure: Bar lengths represent relative test RMSE magnitude. The hybrid LSTM + XGBoost achieved the best overall score.
+          {/* F24: Explanatory text under chart */}
+          <div className="space-y-1 text-[11px] font-mono text-[#5A5A55] dark:text-[#9E9D96] pt-2 border-t border-[#E4E2DC] dark:border-[#272B27]">
+            <p>Each bar is the average error in predicting remaining engine life, in cycles. Shorter bar = more accurate.</p>
+            {results.comparisonNote ? (
+              <p className="text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">{results.comparisonNote}</p>
+            ) : (
+              <p className="text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">The hybrid model is 3% more accurate than XGBoost and 32% more accurate than the CNN.</p>
+            )}
           </div>
         </div>
       )}

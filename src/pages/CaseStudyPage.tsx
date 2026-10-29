@@ -7,15 +7,18 @@ import React, { useState } from 'react';
 import { content, Project } from '../content.ts';
 import { ArchitectureDiagram } from '../components/ArchitectureDiagram.tsx';
 import { ResultsChart } from '../components/ResultsChart.tsx';
+import { VisualSlot } from '../components/VisualSlot.tsx';
 import { LightboxModal } from '../components/LightboxModal.tsx';
-import { ArrowLeft, ExternalLink, Github, Clock, ShieldCheck, AlertCircle, Maximize2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ExternalLink, Github, Clock, ShieldCheck, AlertCircle } from 'lucide-react';
 
 interface CaseStudyPageProps {
   slug: string;
 }
 
 export function CaseStudyPage({ slug }: CaseStudyPageProps) {
-  const project: Project | undefined = content.projects.find((p) => p.slug === slug);
+  const projectIndex = content.projects.findIndex((p) => p.slug === slug);
+  const project: Project | undefined = content.projects[projectIndex];
+  
   const [activeLightboxImage, setActiveLightboxImage] = useState<{
     imageUrl: string;
     altText: string;
@@ -30,7 +33,7 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           Page Not Found
         </h1>
         <p className="text-sm text-[#5A5A55] dark:text-[#9E9D96]">
-          This page does not exist. Go back to the home page.
+          This project does not exist. Go back to the projects catalog.
         </p>
         <a
           href="#/projects"
@@ -43,12 +46,16 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
     );
   }
 
+  const prevProject = projectIndex > 0 ? content.projects[projectIndex - 1] : content.projects[content.projects.length - 1];
+  const nextProject = projectIndex < content.projects.length - 1 ? content.projects[projectIndex + 1] : content.projects[0];
+
   const isAeroTwin = project.id === 'aerotwin';
   const hasLiveDemo = Boolean(project.links?.liveDemo && project.links.liveDemo !== '[ADD LINK]' && project.links.liveDemo !== '[ADD]');
   const hasGithub = Boolean(project.links?.github && project.links.github !== '[ADD LINK]' && project.links.github !== '[ADD]');
   const hasKeyMetric = Boolean(project.keyMetric && project.keyMetric !== '[ADD]');
   const hasLessons = Boolean(project.lessons && project.lessons.length > 0);
-  const galleryItems = (project.gallery || []).filter((item) => Boolean(item.imageUrl));
+  const hasNextSteps = Boolean(project.nextSteps && project.nextSteps.trim());
+  const galleryItems = project.gallery || [];
 
   return (
     <article className="space-y-16 sm:space-y-20 py-4" aria-labelledby="case-study-title">
@@ -68,28 +75,35 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
       {/* Case Study Header */}
       <header className="space-y-6 border-b border-[#E4E2DC] dark:border-[#272B27] pb-8">
         
-        {/* Status / Notices */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-mono">
-          <span className="text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-            Status: {project.status}
-          </span>
-          {project.simulationLabel && (
-            <>
-              <span aria-hidden="true">/</span>
-              <span className="text-[#0E6B5C] dark:text-[#3FB59B] font-sans">
-                {project.simulationLabel}
-              </span>
-            </>
-          )}
-          {project.confidentialityNote && (
-            <>
-              <span aria-hidden="true">/</span>
-              <span className="text-[#5A5A55] dark:text-[#9E9D96] italic font-sans flex items-center gap-1">
-                <AlertCircle className="w-3.5 h-3.5 text-[#0E6B5C] dark:text-[#3FB59B]" aria-hidden="true" />
-                {project.confidentialityNote}
-              </span>
-            </>
-          )}
+        {/* 1. Reading time & Status metadata at the very top */}
+        <div className="flex flex-wrap items-center justify-between gap-y-2 text-xs font-mono">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
+              Status: {project.status}
+            </span>
+            {project.simulationLabel && (
+              <>
+                <span aria-hidden="true">/</span>
+                <span className="text-[#0E6B5C] dark:text-[#3FB59B] font-sans">
+                  {project.simulationLabel}
+                </span>
+              </>
+            )}
+            {project.confidentialityNote && (
+              <>
+                <span aria-hidden="true">/</span>
+                <span className="text-[#5A5A55] dark:text-[#9E9D96] italic font-sans flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 text-[#0E6B5C] dark:text-[#3FB59B]" aria-hidden="true" />
+                  {project.confidentialityNote}
+                </span>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1 text-[#5A5A55] dark:text-[#9E9D96] font-mono">
+            <Clock className="w-3.5 h-3.5 text-[#0E6B5C] dark:text-[#3FB59B]" aria-hidden="true" />
+            <span>{project.readingTime || '4 min read'}</span>
+          </div>
         </div>
 
         {/* Title */}
@@ -103,7 +117,7 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
         </p>
 
         {/* Clean unboxed tags with typographic dot separators */}
-        <div className="flex flex-wrap items-center gap-x-2 text-xs text-[#5A5A55] dark:text-[#9E9D96] pt-2">
+        <div className="flex flex-wrap items-center gap-x-2 text-xs text-[#5A5A55] dark:text-[#9E9D96] pt-1">
           <span className="font-mono text-[#1B1B1B] dark:text-[#ECEBE6]">Tags:</span>
           {project.tags.map((tag, i) => (
             <React.Fragment key={tag}>
@@ -113,10 +127,10 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           ))}
         </div>
 
-        {/* Requirement 10: Summary Box (My role, Tools, Outcome, Links) */}
+        {/* 2. Summary Box (My role, Tools, Outcome, Links) */}
         <div className="mt-8 p-6 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] space-y-4">
           <span className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold block">
-            Project Overview
+            Summary Overview
           </span>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
@@ -194,10 +208,10 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
 
       </header>
 
-      {/* Case Study Sections */}
+      {/* Case Study Sections in Exact D12 Order */}
       <div className="space-y-16">
         
-        {/* 01. The Problem */}
+        {/* 3. The Problem */}
         <section className="space-y-4" aria-labelledby="section-problem">
           <div className="flex items-center gap-3">
             <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
@@ -212,8 +226,8 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           </div>
         </section>
 
-        {/* 02. What I Built */}
-        <section className="space-y-4" aria-labelledby="section-built">
+        {/* 4. What I Built */}
+        <section className="space-y-6" aria-labelledby="section-built">
           <div className="flex items-center gap-3">
             <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
             <h2 id="section-built" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
@@ -225,29 +239,23 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
               {project.whatIBuilt}
             </p>
           </div>
-        </section>
 
-        {/* 03. Architecture Diagram (HTML/CSS) */}
-        <section className="space-y-4" aria-labelledby="section-arch">
-          <div className="flex items-center gap-3">
-            <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
-            <h2 id="section-arch" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-              03. Architecture and Data Flow
-            </h2>
+          {/* Architecture Diagram */}
+          <div className="pt-2">
+            <ArchitectureDiagram
+              title={project.architecture.title}
+              description={project.architecture.description}
+              nodes={project.architecture.nodes}
+            />
           </div>
-          <ArchitectureDiagram
-            title={project.architecture.title}
-            description={project.architecture.description}
-            nodes={project.architecture.nodes}
-          />
         </section>
 
-        {/* 04. Data */}
+        {/* 5. Data */}
         <section className="space-y-4" aria-labelledby="section-data">
           <div className="flex items-center gap-3">
             <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
             <h2 id="section-data" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-              04. Dataset and Inputs
+              03. Dataset and Inputs
             </h2>
           </div>
           <div className="prose max-w-[68ch]">
@@ -257,12 +265,12 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           </div>
         </section>
 
-        {/* 05. Approach */}
+        {/* 6. Approach */}
         <section className="space-y-4" aria-labelledby="section-approach">
           <div className="flex items-center gap-3">
             <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
             <h2 id="section-approach" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-              05. Technical Approach
+              04. Technical Approach
             </h2>
           </div>
           <div className="prose max-w-[68ch]">
@@ -272,23 +280,40 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           </div>
         </section>
 
-        {/* 06. Results (Chart + Table + Summary) */}
+        {/* 7. Results (ResultsChart with F24 chart specs) */}
         <section className="space-y-4" aria-labelledby="section-results">
           <div className="flex items-center gap-3">
             <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
             <h2 id="section-results" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-              06. Empirical Results and Benchmark
+              05. Empirical Results and Benchmark
             </h2>
           </div>
           <ResultsChart results={project.results} />
         </section>
 
-        {/* 07. How AI Tools Were Used & Checked */}
+        {/* 8. Challenges and what I learned (conditional: shown ONLY when filled) */}
+        {hasLessons && (
+          <section className="space-y-4" aria-labelledby="section-lessons">
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
+              <h2 id="section-lessons" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
+                06. Challenges and what I learned
+              </h2>
+            </div>
+            <ul className="space-y-2 text-sm text-[#1B1B1B] dark:text-[#ECEBE6] list-disc list-inside max-w-[68ch]">
+              {project.lessons?.map((lesson, i) => (
+                <li key={i}>{lesson}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* 9. How AI Tools Were Used & Checked */}
         <section className="space-y-4" aria-labelledby="section-ai">
           <div className="flex items-center gap-3">
             <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
             <h2 id="section-ai" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-              07. How AI Tools Were Used and Verified
+              {hasLessons ? "07. How AI Tools Were Used and Verified" : "06. How AI Tools Were Used and Verified"}
             </h2>
           </div>
 
@@ -316,71 +341,30 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           </div>
         </section>
 
-        {/* Requirement 11: Challenges and what I learned (shown ONLY when filled) */}
-        {hasLessons && (
-          <section className="space-y-4" aria-labelledby="section-lessons">
-            <div className="flex items-center gap-3">
-              <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
-              <h2 id="section-lessons" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-                08. Challenges and what I learned
-              </h2>
-            </div>
-            <ul className="space-y-2 text-sm text-[#1B1B1B] dark:text-[#ECEBE6] list-disc list-inside max-w-[68ch]">
-              {project.lessons?.map((lesson, i) => (
-                <li key={i}>{lesson}</li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {/* Image Gallery (shown ONLY when images exist, e.g. KaribuTech has no images so this is hidden) */}
+        {/* 10. Visual Artifact Gallery (using VisualSlot in fixed 16:10 frame with slotId) */}
         {galleryItems.length > 0 && (
           <section className="space-y-6" aria-labelledby="section-gallery">
             <div className="flex items-center gap-3">
               <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
               <h2 id="section-gallery" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
-                {hasLessons ? "09. Interface and Artifact Gallery" : "08. Interface and Artifact Gallery"}
+                {hasLessons ? "08. Visual Artifact Gallery" : "07. Visual Artifact Gallery"}
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {galleryItems.map((item) => (
                 <figure key={item.id} className="w-full space-y-2">
-                  <div
-                    tabIndex={0}
-                    role="button"
-                    aria-label={`View ${item.title || item.altText} in larger view`}
-                    onClick={() => setActiveLightboxImage({
-                      imageUrl: item.imageUrl!,
-                      altText: item.altText,
-                      title: item.title,
-                      caption: item.caption
-                    })}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        setActiveLightboxImage({
-                          imageUrl: item.imageUrl!,
-                          altText: item.altText,
-                          title: item.title,
-                          caption: item.caption
-                        });
-                      }
-                    }}
-                    className="group relative w-full aspect-[16/10] bg-[#F4F3EE] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] overflow-hidden flex items-center justify-center cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-[#0E6B5C] dark:focus:ring-[#3FB59B]"
-                  >
-                    <img
-                      src={item.imageUrl}
-                      alt={item.altText}
-                      width={1600}
-                      height={1000}
-                      loading="lazy"
-                      className="w-full h-full object-contain p-2"
+                  <div className="border border-[#E4E2DC] dark:border-[#272B27]">
+                    <VisualSlot
+                      slotId={item.slotId}
+                      imageUrl={item.imageUrl}
+                      altText={item.altText}
+                      fallbackType={item.fallbackType}
+                      projectSlug={project.slug}
+                      aspectRatio="16:10"
+                      objectFit="contain"
+                      enableLightbox={true}
                     />
-                    <div className="absolute bottom-2 right-2 px-2 py-1 bg-[#121412]/80 text-[#ECEBE6] text-[11px] font-mono flex items-center gap-1 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
-                      <Maximize2 className="w-3 h-3" aria-hidden="true" />
-                      <span>Enlarge</span>
-                    </div>
                   </div>
                   {item.caption && (
                     <figcaption className="text-xs text-[#5A5A55] dark:text-[#9E9D96] font-sans leading-relaxed">
@@ -393,23 +377,70 @@ export function CaseStudyPage({ slug }: CaseStudyPageProps) {
           </section>
         )}
 
+        {/* 11. Next steps */}
+        {hasNextSteps && (
+          <section className="space-y-4" aria-labelledby="section-next-steps">
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-px bg-[#0E6B5C] dark:bg-[#3FB59B]" aria-hidden="true" />
+              <h2 id="section-next-steps" className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
+                {hasLessons ? "09. Next Steps" : "08. Next Steps"}
+              </h2>
+            </div>
+            <div className="p-6 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] space-y-2">
+              <p className="text-sm text-[#1B1B1B] dark:text-[#ECEBE6] leading-relaxed max-w-[68ch]">
+                {project.nextSteps}
+              </p>
+            </div>
+          </section>
+        )}
+
       </div>
 
-      {/* Case Study Footer Navigation */}
-      <div className="pt-12 border-t border-[#E4E2DC] dark:border-[#272B27] flex items-center justify-between">
-        <a
-          href="#/projects"
-          className="inline-flex items-center gap-2 text-xs font-medium text-[#0E6B5C] dark:text-[#3FB59B] hover:underline"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>Return to all projects</span>
-        </a>
-        <a
-          href="#/contact"
-          className="inline-flex items-center gap-2 text-xs font-medium text-[#1B1B1B] dark:text-[#ECEBE6] hover:text-[#0E6B5C] dark:hover:text-[#3FB59B]"
-        >
-          <span>Discuss this project with Kuzivakwashe →</span>
-        </a>
+      {/* 12. Previous and Next Project Navigation Links */}
+      <div className="pt-12 border-t border-[#E4E2DC] dark:border-[#272B27] space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <a
+            href={`#/projects/${prevProject.slug}`}
+            className="p-4 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#0E6B5C] dark:hover:border-[#3FB59B] transition-colors group"
+          >
+            <span className="block font-mono text-[11px] uppercase tracking-wider text-[#5A5A55] dark:text-[#9E9D96] mb-1 flex items-center gap-1">
+              <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" aria-hidden="true" />
+              <span>Previous Project</span>
+            </span>
+            <span className="font-serif text-sm font-semibold text-[#1B1B1B] dark:text-[#ECEBE6] group-hover:text-[#0E6B5C] dark:group-hover:text-[#3FB59B] transition-colors line-clamp-1">
+              {prevProject.title}
+            </span>
+          </a>
+
+          <a
+            href={`#/projects/${nextProject.slug}`}
+            className="p-4 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#0E6B5C] dark:hover:border-[#3FB59B] transition-colors text-right group"
+          >
+            <span className="block font-mono text-[11px] uppercase tracking-wider text-[#5A5A55] dark:text-[#9E9D96] mb-1 flex items-center justify-end gap-1">
+              <span>Next Project</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+            </span>
+            <span className="font-serif text-sm font-semibold text-[#1B1B1B] dark:text-[#ECEBE6] group-hover:text-[#0E6B5C] dark:group-hover:text-[#3FB59B] transition-colors line-clamp-1">
+              {nextProject.title}
+            </span>
+          </a>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <a
+            href="#/projects"
+            className="inline-flex items-center gap-2 text-xs font-medium text-[#0E6B5C] dark:text-[#3FB59B] hover:underline"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Return to all projects</span>
+          </a>
+          <a
+            href="#/contact"
+            className="inline-flex items-center gap-2 text-xs font-medium text-[#1B1B1B] dark:text-[#ECEBE6] hover:text-[#0E6B5C] dark:hover:text-[#3FB59B]"
+          >
+            <span>Discuss this project with Kuzivakwashe →</span>
+          </a>
+        </div>
       </div>
 
       {/* Accessible Lightbox Modal */}

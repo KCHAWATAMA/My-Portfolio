@@ -6,32 +6,34 @@
 import React from 'react';
 import { content } from '../content.ts';
 import { ProjectCard } from '../components/ProjectCard.tsx';
-import { ArrowRight, FileText, Mail } from 'lucide-react';
+import { VisualSlot, ResultsMiniChart } from '../components/VisualSlot.tsx';
+import { ArrowRight, FileText, Mail, Linkedin } from 'lucide-react';
 
 export function HomePage() {
   const featuredProjects = content.projects.filter((p) => p.featured);
+  const hasCv = Boolean(content.profile.cvUrl && content.profile.cvUrl.trim());
 
   return (
     <div className="space-y-20 sm:space-y-24">
       
       {/* Hero Section */}
       <section className="pt-8 sm:pt-14 pb-8 border-b border-[#E4E2DC] dark:border-[#272B27]" aria-labelledby="hero-title">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
-          {/* Mobile Profile Photo (above the name on mobile, hidden on md+) */}
-          <div className="md:hidden w-36 h-36">
-            <img
-              src={content.profile.photoUrl}
-              alt={content.profile.photoAlt}
-              width={800}
-              height={800}
-              loading="lazy"
-              className="w-full h-full object-cover border border-[#E4E2DC] dark:border-[#272B27] rounded-none"
+          {/* Mobile Profile Photo / Monogram (above the name on mobile, hidden on lg+) */}
+          <div className="lg:hidden w-36 h-36">
+            <VisualSlot
+              slotId="hero-photo"
+              imageUrl={content.profile.photoUrl}
+              altText={content.profile.photoAlt}
+              fallbackType="profileMonogram"
+              aspectRatio="1:1"
+              enableLightbox={true}
             />
           </div>
 
-          {/* Left Column: Typographic Content */}
-          <div className="md:col-span-8 space-y-6">
+          {/* Left Column: Typographic Content (7/12 on lg) */}
+          <div className="lg:col-span-7 space-y-6">
             
             {/* Identity line */}
             <div className="flex items-center gap-3">
@@ -41,22 +43,29 @@ export function HomePage() {
               </p>
             </div>
 
-            {/* Full Name & Headline */}
-            <h1 id="hero-title" className="font-serif text-3xl sm:text-5xl lg:text-5xl font-bold tracking-tight text-[#1B1B1B] dark:text-[#ECEBE6] leading-[1.15] text-balance">
+            {/* Full Name & Headline with fluid clamp typography */}
+            <h1
+              id="hero-title"
+              className="font-serif font-bold tracking-tight text-[#1B1B1B] dark:text-[#ECEBE6] leading-[1.12] text-balance"
+              style={{ fontSize: 'clamp(2.5rem, 4vw + 1rem, 4.5rem)' }}
+            >
               {content.profile.fullName}
             </h1>
 
-            {/* Pitch */}
-            <p className="text-lg sm:text-xl text-[#5A5A55] dark:text-[#9E9D96] leading-relaxed max-w-[68ch]">
+            {/* Pitch with fluid clamp typography */}
+            <p
+              className="text-[#5A5A55] dark:text-[#9E9D96] leading-relaxed max-w-[68ch]"
+              style={{ fontSize: 'clamp(1.125rem, 0.6vw + 1rem, 1.375rem)' }}
+            >
               {content.profile.pitch}
             </p>
 
             {/* Quiet Recruiter Proof Strip (three facts in mono type) */}
-            <div className="py-2 border-y border-[#E4E2DC] dark:border-[#272B27]">
+            <div className="py-2.5 border-y border-[#E4E2DC] dark:border-[#272B27]">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-[#0E6B5C] dark:text-[#3FB59B]">
                 {content.profile.proofStrip.map((fact, index) => (
                   <React.Fragment key={fact}>
-                    <span>{fact}</span>
+                    <span className="font-medium">{fact}</span>
                     {index < content.profile.proofStrip.length - 1 && (
                       <span className="text-[#5A5A55] dark:text-[#9E9D96]" aria-hidden="true">·</span>
                     )}
@@ -65,7 +74,7 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* Location and immediate status */}
+            {/* Location and immediate availability */}
             <div className="text-xs font-mono text-[#5A5A55] dark:text-[#9E9D96] flex flex-wrap items-center gap-x-2">
               <span>Location: {content.profile.location}</span>
               <span aria-hidden="true">/</span>
@@ -74,40 +83,67 @@ export function HomePage() {
               </span>
             </div>
 
-            {/* Action buttons: Download CV (opens in new tab) with Email me right beside it */}
+            {/* Action buttons: Download CV (ONLY when cvUrl is set) and Email me */}
             <div className="pt-2 flex flex-wrap items-center gap-4">
-              <a
-                href={content.profile.downloadCvUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#FAFAF7] bg-[#0E6B5C] hover:bg-[#0A4F44] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors"
-              >
-                <FileText className="w-4 h-4" aria-hidden="true" />
-                <span>Download CV</span>
-              </a>
+              {hasCv && (
+                <a
+                  href={content.profile.cvUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-medium text-[#FAFAF7] bg-[#0E6B5C] hover:bg-[#0A4F44] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors cursor-pointer"
+                >
+                  <FileText className="w-4 h-4" aria-hidden="true" />
+                  <span>Download CV</span>
+                </a>
+              )}
 
               <a
                 href={`mailto:${content.profile.email}`}
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#1B1B1B] dark:text-[#ECEBE6] bg-transparent border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-medium text-[#1B1B1B] dark:text-[#ECEBE6] bg-transparent border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] transition-colors cursor-pointer"
               >
                 <Mail className="w-4 h-4" aria-hidden="true" />
                 <span>Email me</span>
+              </a>
+
+              <a
+                href={content.profile.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-medium text-[#5A5A55] dark:text-[#9E9D96] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] transition-colors"
+              >
+                <Linkedin className="w-4 h-4" aria-hidden="true" />
+                <span>LinkedIn</span>
               </a>
             </div>
 
           </div>
 
-          {/* Desktop Profile Photo (right side on desktop, square crop, 1px hairline border, no circle, no shadow) */}
-          <div className="hidden md:flex md:col-span-4 justify-end">
-            <div className="w-64 h-64 lg:w-72 lg:h-72 aspect-square">
-              <img
-                src={content.profile.photoUrl}
-                alt={content.profile.photoAlt}
-                width={800}
-                height={800}
-                loading="lazy"
-                className="w-full h-full object-cover border border-[#E4E2DC] dark:border-[#272B27] rounded-none"
+          {/* Right Column: Visual (5/12 on lg) */}
+          {/* On lg: hero-photo above framed ResultsMiniChart with header "AeroTwin results" */}
+          <div className="hidden lg:flex lg:col-span-5 flex-col space-y-6">
+            <div className="w-64 h-64 xl:w-72 xl:h-72 aspect-square border border-[#E4E2DC] dark:border-[#272B27]">
+              <VisualSlot
+                slotId="hero-photo"
+                imageUrl={content.profile.photoUrl}
+                altText={content.profile.photoAlt}
+                fallbackType="profileMonogram"
+                aspectRatio="1:1"
+                enableLightbox={true}
               />
+            </div>
+
+            <div className="border border-[#E4E2DC] dark:border-[#272B27] bg-[#FFFFFF] dark:bg-[#181B18] overflow-hidden">
+              <div className="px-4 py-2 border-b border-[#E4E2DC] dark:border-[#272B27] flex items-center justify-between">
+                <span className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">
+                  AeroTwin results
+                </span>
+                <span className="font-mono text-[11px] text-[#5A5A55] dark:text-[#9E9D96]">
+                  RMSE 14.00
+                </span>
+              </div>
+              <div className="aspect-[16/10] w-full">
+                <ResultsMiniChart />
+              </div>
             </div>
           </div>
 
@@ -211,6 +247,41 @@ export function HomePage() {
               </ul>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Final CTA Section: Hiring for a data role in Qatar? Let's talk. */}
+      <section className="p-8 sm:p-12 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] text-center space-y-6">
+        <div className="space-y-2 max-w-xl mx-auto">
+          <span className="font-mono text-xs uppercase tracking-wider text-[#0E6B5C] dark:text-[#3FB59B] font-semibold block">
+            Direct Inquiry
+          </span>
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1B1B1B] dark:text-[#ECEBE6]">
+            Hiring for a data role in Qatar? Let&apos;s talk.
+          </h2>
+          <p className="text-sm text-[#5A5A55] dark:text-[#9E9D96] leading-relaxed">
+            I am located in Al Wakra, Qatar and available immediately for full-time data science, machine learning, and backend positions.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+          <a
+            href={`mailto:${content.profile.email}`}
+            className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-medium text-[#FAFAF7] bg-[#0E6B5C] hover:bg-[#0A4F44] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors cursor-pointer"
+          >
+            <Mail className="w-4 h-4" aria-hidden="true" />
+            <span>Email me directly</span>
+          </a>
+
+          <a
+            href={content.profile.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-medium text-[#1B1B1B] dark:text-[#ECEBE6] bg-transparent border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] transition-colors cursor-pointer"
+          >
+            <Linkedin className="w-4 h-4" aria-hidden="true" />
+            <span>Connect on LinkedIn</span>
+          </a>
         </div>
       </section>
 

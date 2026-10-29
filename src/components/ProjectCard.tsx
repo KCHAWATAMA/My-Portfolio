@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Project } from '../content.ts';
+import { VisualSlot } from './VisualSlot.tsx';
 import { ArrowUpRight } from 'lucide-react';
 
 interface ProjectCardProps {
@@ -14,27 +15,22 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, index }: ProjectCardProps) {
   const caseStudyUrl = `#/projects/${project.slug}`;
-  const hasImage = Boolean(project.imageUrl);
   const hasKeyMetric = Boolean(project.keyMetric && project.keyMetric !== '[ADD]');
 
   return (
-    <article className="group flex flex-col bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#0E6B5C] dark:hover:border-[#3FB59B] transition-colors">
+    <article className="group flex flex-col bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#0E6B5C] dark:hover:border-[#3FB59B] transition-colors overflow-hidden">
       
-      {/* Visual slot (fixed 16:10 frame, object-fit cover, width and height set, loading lazy) - ONLY if project has image */}
-      {hasImage && (
-        <a href={caseStudyUrl} className="block overflow-hidden focus:outline-hidden" tabIndex={-1} aria-hidden="true">
-          <div className="relative w-full aspect-[16/10] bg-[#F4F3EE] dark:bg-[#181B18] border-b border-[#E4E2DC] dark:border-[#272B27] overflow-hidden">
-            <img
-              src={project.imageUrl}
-              alt={project.title}
-              width={1600}
-              height={1000}
-              loading="lazy"
-              className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-            />
-          </div>
-        </a>
-      )}
+      {/* Visual slot (fixed 16:10 frame, real image if provided, otherwise theme-aware SVG) */}
+      <a href={caseStudyUrl} className="block overflow-hidden focus:outline-hidden border-b border-[#E4E2DC] dark:border-[#272B27]" tabIndex={-1} aria-hidden="true">
+        <VisualSlot
+          slotId={project.cardSlotId}
+          imageUrl={project.imageUrl}
+          altText={project.title}
+          fallbackType={project.fallbackType}
+          projectSlug={project.slug}
+          objectFit="cover"
+        />
+      </a>
 
       {/* Card Body */}
       <div className="p-6 flex flex-col flex-grow justify-between space-y-4">

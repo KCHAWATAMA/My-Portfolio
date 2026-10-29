@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { content } from '../content.ts';
+import { VisualSlot } from '../components/VisualSlot.tsx';
 import { GraduationCap, Briefcase, Globe, Award } from 'lucide-react';
 
 export function AboutPage() {
@@ -34,16 +35,17 @@ export function AboutPage() {
         
         {/* Photo Slot (Square crop, subtle 1px hairline border, no circle, no shadow) */}
         <div className="md:col-span-5 space-y-3">
-          <div className="w-full aspect-square bg-[#F4F3EE] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] overflow-hidden">
-            <img
-              src={content.profile.photoUrl}
-              alt={content.profile.photoAlt}
-              width={800}
-              height={800}
-              loading="lazy"
-              className="w-full h-full object-cover rounded-none"
+          <div className="w-full aspect-square border border-[#E4E2DC] dark:border-[#272B27] overflow-hidden">
+            <VisualSlot
+              slotId="about-photo"
+              imageUrl={content.profile.photoUrl}
+              altText={content.profile.photoAlt}
+              fallbackType="profileMonogram"
+              aspectRatio="1:1"
+              enableLightbox={true}
             />
           </div>
+
           <div className="p-4 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] space-y-1.5 text-xs font-mono">
             <div className="flex justify-between">
               <span className="text-[#5A5A55] dark:text-[#9E9D96]">Location:</span>
