@@ -22,6 +22,7 @@ export interface Profile {
   phone: string;
   linkedin: string;
   github: string;
+  developerProfileUrl?: string;
   cvUrl: string;
   downloadCvUrl: string;
   photoUrl: string;
@@ -146,6 +147,14 @@ export interface MoreWorkItem {
   link?: string;
 }
 
+export interface Badge {
+  title: string;
+  issuer: string;
+  date: string;
+  note?: string;
+  url: string;
+}
+
 export interface Certificate {
   id: string;
   title: string;
@@ -173,6 +182,7 @@ export interface PortfolioContent {
   projects: Project[];
   moreWork: MoreWorkItem[];
   credentials: Certificate[];
+  badges: Badge[];
   languages: LanguageItem[];
   about: AboutContent;
 }
@@ -194,6 +204,7 @@ export const content: PortfolioContent = {
     phone: "+974 6652 7520",
     linkedin: "https://www.linkedin.com/in/kuzivakwashej",
     github: "https://github.com/KCHAWATAMA",
+    developerProfileUrl: "https://g.dev/kuzivakwashejoshuachawatama",
     cvUrl: "",
     downloadCvUrl: "",
     photoUrl: "",
@@ -564,6 +575,34 @@ export const content: PortfolioContent = {
       title: "Data Protection Officer Training",
       issuer: "Alison",
       year: "2026"
+    }
+  ],
+
+  badges: [
+    {
+      title: "Gemini Agent Ready",
+      issuer: "Google Developer Program",
+      date: "Oct 2026",
+      url: "https://g.dev/kuzivakwashejoshuachawatama"
+    },
+    {
+      title: "GDG Events (level 3)",
+      issuer: "Google Developer Groups",
+      date: "Oct 2026",
+      note: "Attended Google Developer Group events",
+      url: "https://g.dev/kuzivakwashejoshuachawatama"
+    },
+    {
+      title: "Google Cloud & NVIDIA community member",
+      issuer: "Google Cloud and NVIDIA",
+      date: "Oct 2026",
+      url: "https://g.dev/kuzivakwashejoshuachawatama"
+    },
+    {
+      title: "Google Developer Program premium tier",
+      issuer: "Google",
+      date: "Oct 2026",
+      url: "https://g.dev/kuzivakwashejoshuachawatama"
     }
   ],
 

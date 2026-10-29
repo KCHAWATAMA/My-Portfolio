@@ -86,6 +86,18 @@ export function Footer() {
                   GitHub Repository
                 </a>
               </li>
+              {content.profile.developerProfileUrl && (
+                <li>
+                  <a
+                    href={content.profile.developerProfileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#0B5A4D] dark:hover:text-[#3FB59B] transition-colors py-1 min-h-[24px] inline-flex items-center focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
+                  >
+                    Google Developer Profile
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

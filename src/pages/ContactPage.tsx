@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { content } from '../content.ts';
-import { Phone, Linkedin, Github, MapPin, Send, Copy, Check, Clock } from 'lucide-react';
+import { Phone, Linkedin, Github, MapPin, Send, Copy, Check, Clock, ExternalLink } from 'lucide-react';
 
 export function ContactPage() {
   const [formData, setFormData] = useState({
@@ -154,6 +154,17 @@ export function ContactPage() {
                     <Github className="w-4 h-4" aria-hidden="true" />
                     <span>GitHub (github.com/KCHAWATAMA)</span>
                   </a>
+                  {content.profile.developerProfileUrl && (
+                    <a
+                      href={content.profile.developerProfileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-[14px] text-[#0B5A4D] dark:text-[#3FB59B] hover:underline py-1 min-h-[24px] focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none font-semibold"
+                    >
+                      <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                      <span>Google Developer Profile (g.dev/kuzivakwashejoshuachawatama)</span>
+                    </a>
+                  )}
                 </div>
               </li>
             </ul>
