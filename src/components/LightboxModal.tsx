@@ -61,18 +61,18 @@ export function LightboxModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative max-w-5xl w-full max-h-[90vh] flex flex-col bg-[#121412] border border-[#272B27] p-4 sm:p-6 space-y-4">
+      <div className="relative max-w-5xl w-full max-h-[90vh] flex flex-col bg-[#121412] border border-[#2E332E] p-4 sm:p-6 space-y-4">
         
         {/* Top bar with close button */}
-        <div className="flex items-center justify-between gap-4 border-b border-[#272B27] pb-3 text-xs font-mono">
-          <span className="text-[#3FB59B] truncate">
+        <div className="flex items-center justify-between gap-4 border-b border-[#2E332E] pb-3 text-[13px] font-mono">
+          <span className="text-[#3FB59B] truncate font-semibold">
             {title || altText}
           </span>
           <button
             ref={closeBtnRef}
             type="button"
             onClick={onClose}
-            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-[#ECEBE6] hover:text-[#3FB59B] border border-[#272B27] hover:border-[#3FB59B] transition-colors cursor-pointer"
+            className="flex items-center gap-2 min-h-[44px] px-3.5 py-2 text-[13px] text-[#ECEBE6] hover:text-[#3FB59B] border border-[#2E332E] hover:border-[#3FB59B] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#3FB59B] outline-none"
             aria-label="Close image preview"
           >
             <span>Close (Esc)</span>
@@ -81,7 +81,7 @@ export function LightboxModal({
         </div>
 
         {/* Image container with fixed 16:10 frame and object-contain */}
-        <div className="relative w-full aspect-[16/10] bg-[#181B18] overflow-hidden flex items-center justify-center border border-[#272B27]">
+        <div className="relative w-full aspect-[16/10] bg-[#181B18] overflow-hidden flex items-center justify-center border border-[#2E332E]">
           <img
             src={imageUrl}
             alt={altText}
@@ -94,7 +94,7 @@ export function LightboxModal({
 
         {/* Caption */}
         {caption && (
-          <p className="text-xs text-[#9E9D96] font-sans leading-relaxed">
+          <p className="text-[13px] text-[#B4B3AC] font-sans leading-relaxed">
             {caption}
           </p>
         )}

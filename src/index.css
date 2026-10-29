@@ -12,16 +12,16 @@
     --bg-surface: #FFFFFF;
     --border-hairline: #E4E2DC;
     --text-ink: #1B1B1B;
-    --text-muted: #5A5A55;
-    --accent: #0E6B5C;
+    --text-muted: #4A4A45;
+    --accent: #0B5A4D;
   }
 
   .dark {
     --bg-page: #121412;
     --bg-surface: #181B18;
-    --border-hairline: #272B27;
+    --border-hairline: #2E332E;
     --text-ink: #ECEBE6;
-    --text-muted: #9E9D96;
+    --text-muted: #B4B3AC;
     --accent: #3FB59B;
   }
 
@@ -30,6 +30,24 @@
     font-size: 17px;
     line-height: 1.6;
     scroll-behavior: smooth;
+    color: var(--text-ink);
+    background-color: var(--bg-page);
+  }
+
+  body {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text-ink);
+    background-color: var(--bg-page);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+  }
+
+  p {
+    line-height: 1.6;
+    max-width: 68ch;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -43,11 +61,12 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+      transform: none !important;
     }
   }
 
   *:focus-visible {
-    outline: 2px solid #0E6B5C;
+    outline: 2px solid #0B5A4D;
     outline-offset: 2px;
   }
 

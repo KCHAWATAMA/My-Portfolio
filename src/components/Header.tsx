@@ -24,54 +24,51 @@ export function Header({ currentPath }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#FAFAF7]/95 dark:bg-[#121412]/95 backdrop-blur-xs border-b border-[#E4E2DC] dark:border-[#272B27] transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-[#FAFAF7]/90 dark:bg-[#121412]/90 backdrop-blur-md border-b border-[#E4E2DC] dark:border-[#2E332E] transition-colors">
       <div className="max-w-7xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-6 h-18">
+        <div className="flex items-center justify-between gap-6 h-20">
           
           {/* Brand title, single line text */}
           <a
             href="#/"
-            className="text-base sm:text-lg font-serif font-semibold tracking-tight text-[#1B1B1B] dark:text-[#ECEBE6] hover:text-[#0E6B5C] dark:hover:text-[#3FB59B] transition-colors whitespace-nowrap shrink-0"
+            className="text-lg sm:text-xl font-serif font-bold tracking-tight text-[#1B1B1B] dark:text-[#ECEBE6] hover:text-[#0B5A4D] dark:hover:text-[#3FB59B] transition-colors whitespace-nowrap shrink-0 focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
           >
             {content.profile.fullName}
           </a>
 
-          {/* Full navigation from lg breakpoint up */}
-          <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-[#5A5A55] dark:text-[#9E9D96]" aria-label="Main navigation">
+          {/* Full navigation from lg breakpoint up; active link is underlined */}
+          <nav className="hidden lg:flex items-center gap-8 text-[15px] font-medium text-[#4A4A45] dark:text-[#B4B3AC]" aria-label="Main navigation">
             {content.navLinks.map((link) => {
               const active = isActive(link.href);
               return (
                 <a
                   key={link.href}
                   href={link.href}
-                  className={`whitespace-nowrap transition-colors py-1 relative ${
+                  className={`whitespace-nowrap transition-colors py-2 focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none ${
                     active
-                      ? 'text-[#0E6B5C] dark:text-[#3FB59B] font-semibold'
+                      ? 'text-[#0B5A4D] dark:text-[#3FB59B] font-semibold underline underline-offset-8 decoration-2 decoration-[#0B5A4D] dark:decoration-[#3FB59B]'
                       : 'hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6]'
                   }`}
                   aria-current={active ? 'page' : undefined}
                 >
                   {link.label}
-                  {active && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0E6B5C] dark:bg-[#3FB59B]" />
-                  )}
                 </a>
               );
             })}
           </nav>
 
-          {/* Right controls: Theme toggle icon button + Email link */}
+          {/* Right controls: Theme toggle icon button + Email link (minimum 44px tap targets) */}
           <div className="flex items-center gap-3 shrink-0">
-            {/* Theme toggle rendered as an icon button with clear aria-label */}
+            {/* Theme toggle rendered as an icon button with min 44px tap target */}
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 border border-[#E4E2DC] dark:border-[#272B27] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] text-[#5A5A55] dark:text-[#9E9D96] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] transition-colors cursor-pointer"
+              className="min-h-[44px] min-w-[44px] p-2.5 border border-[#E4E2DC] dark:border-[#2E332E] hover:border-[#1B1B1B] dark:hover:border-[#ECEBE6] text-[#4A4A45] dark:text-[#B4B3AC] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] transition-colors cursor-pointer flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
               aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
             >
               {theme === 'light' ? (
-                <Moon className="w-4 h-4 text-[#5A5A55]" aria-hidden="true" />
+                <Moon className="w-4 h-4 text-[#4A4A45]" aria-hidden="true" />
               ) : (
                 <Sun className="w-4 h-4 text-[#ECEBE6]" aria-hidden="true" />
               )}
@@ -79,7 +76,7 @@ export function Header({ currentPath }: HeaderProps) {
 
             <a
               href={`mailto:${content.profile.email}`}
-              className="hidden sm:inline-flex items-center justify-center px-3.5 py-1.5 text-xs font-medium text-[#FAFAF7] bg-[#0E6B5C] hover:bg-[#0A4F44] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors whitespace-nowrap"
+              className="hidden sm:inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 text-[15px] font-medium text-[#FAFAF7] bg-[#0B5A4D] hover:bg-[#08453B] dark:bg-[#3FB59B] dark:text-[#121412] dark:hover:bg-[#4FD3B6] transition-colors whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
             >
               Email me
             </a>
@@ -88,7 +85,7 @@ export function Header({ currentPath }: HeaderProps) {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-[#5A5A55] dark:text-[#9E9D96] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] border border-[#E4E2DC] dark:border-[#272B27] transition-colors cursor-pointer"
+              className="lg:hidden min-h-[44px] min-w-[44px] p-2.5 text-[#4A4A45] dark:text-[#B4B3AC] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6] border border-[#E4E2DC] dark:border-[#2E332E] transition-colors cursor-pointer flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none"
               aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileMenuOpen}
             >
@@ -103,7 +100,7 @@ export function Header({ currentPath }: HeaderProps) {
 
         {/* Mobile dropdown drawer below lg */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-[#E4E2DC] dark:border-[#272B27]">
+          <div className="lg:hidden py-4 border-t border-[#E4E2DC] dark:border-[#2E332E]">
             <nav className="flex flex-col space-y-3" aria-label="Mobile navigation">
               {content.navLinks.map((link) => {
                 const active = isActive(link.href);
@@ -112,10 +109,10 @@ export function Header({ currentPath }: HeaderProps) {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`px-2 py-1.5 text-sm ${
+                    className={`min-h-[44px] flex items-center px-3 py-2 text-[15px] ${
                       active
-                        ? 'text-[#0E6B5C] dark:text-[#3FB59B] font-semibold'
-                        : 'text-[#5A5A55] dark:text-[#9E9D96]'
+                        ? 'text-[#0B5A4D] dark:text-[#3FB59B] font-semibold underline underline-offset-4 decoration-2'
+                        : 'text-[#4A4A45] dark:text-[#B4B3AC]'
                     }`}
                     aria-current={active ? 'page' : undefined}
                   >
@@ -123,10 +120,10 @@ export function Header({ currentPath }: HeaderProps) {
                   </a>
                 );
               })}
-              <div className="pt-2 border-t border-[#E4E2DC] dark:border-[#272B27]">
+              <div className="pt-2 border-t border-[#E4E2DC] dark:border-[#2E332E]">
                 <a
                   href={`mailto:${content.profile.email}`}
-                  className="block px-3 py-2 text-center text-sm font-medium text-[#FAFAF7] bg-[#0E6B5C] dark:bg-[#3FB59B] dark:text-[#121412]"
+                  className="flex items-center justify-center min-h-[44px] px-4 py-2.5 text-center text-[15px] font-medium text-[#FAFAF7] bg-[#0B5A4D] dark:bg-[#3FB59B] dark:text-[#121412]"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Email me

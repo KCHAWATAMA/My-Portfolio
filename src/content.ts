@@ -507,11 +507,11 @@ export const content: PortfolioContent = {
         {
           id: "karibu-fig1",
           slotId: "kaributech-fig-1",
-          title: "System Integration Pipeline",
-          caption: "Figure 1. Integration flow connecting customer ingestion channels to Drools credit scoring and bank test environment.",
-          altText: "Banking integration pipeline diagram.",
+          title: "Key Verification Deliverables",
+          caption: "Diagram: confirmed figures from the attachment",
+          altText: "Banking integration deliverables and verification figures.",
           imageUrl: "",
-          fallbackType: "pipelineDiagram"
+          fallbackType: "proofTiles"
         }
       ]
     }

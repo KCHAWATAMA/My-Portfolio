@@ -17,8 +17,8 @@ export function ResultsChart({ results }: ResultsChartProps) {
 
   if (!results.chart && !results.table) {
     return (
-      <div className="p-6 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27]">
-        <p className="text-sm text-[#5A5A55] dark:text-[#9E9D96]">
+      <div className="p-6 bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#2E332E]">
+        <p className="text-[17px] text-[#4A4A45] dark:text-[#B4B3AC] leading-[1.6]">
           {results.summary}
         </p>
       </div>
@@ -41,28 +41,28 @@ export function ResultsChart({ results }: ResultsChartProps) {
     : 100;
 
   return (
-    <div className="bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#272B27] p-6 space-y-6">
+    <div className="bg-[#FFFFFF] dark:bg-[#181B18] border border-[#E4E2DC] dark:border-[#2E332E] p-6 space-y-6">
       
       {/* Header with Title and View Mode Toggle */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E4E2DC] dark:border-[#272B27]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E4E2DC] dark:border-[#2E332E]">
         <div>
-          <span className="text-xs uppercase tracking-wider font-mono text-[#0E6B5C] dark:text-[#3FB59B] block mb-1">
+          <span className="text-[13px] uppercase tracking-[0.06em] font-mono text-[#0B5A4D] dark:text-[#3FB59B] block mb-1 font-semibold">
             Empirical Results
           </span>
-          <h4 className="font-serif text-lg font-semibold text-[#1B1B1B] dark:text-[#ECEBE6]">
+          <h3 className="font-serif text-xl font-bold text-[#1B1B1B] dark:text-[#ECEBE6] leading-[1.2]">
             {chart?.title || 'Prediction error by model (lower is better)'}
-          </h4>
+          </h3>
         </div>
 
-        {/* View Mode controls */}
-        <div className="flex items-center gap-1 self-start sm:self-auto p-1 bg-[#F4F3EE] dark:bg-[#121412] border border-[#E4E2DC] dark:border-[#272B27]">
+        {/* View Mode controls: Min 44px height */}
+        <div className="flex items-center gap-1 self-start sm:self-auto p-1 bg-[#F4F3EE] dark:bg-[#121412] border border-[#E4E2DC] dark:border-[#2E332E]">
           <button
             type="button"
             onClick={() => setViewMode('both')}
-            className={`px-2.5 py-1 text-xs font-sans transition-colors cursor-pointer ${
+            className={`min-h-[44px] px-3.5 py-2 text-[13px] font-sans transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none ${
               viewMode === 'both'
-                ? 'bg-[#FFFFFF] dark:bg-[#181B18] text-[#1B1B1B] dark:text-[#ECEBE6] font-medium shadow-2xs'
-                : 'text-[#5A5A55] dark:text-[#9E9D96] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6]'
+                ? 'bg-[#FFFFFF] dark:bg-[#181B18] text-[#1B1B1B] dark:text-[#ECEBE6] font-semibold border border-[#E4E2DC] dark:border-[#2E332E]'
+                : 'text-[#4A4A45] dark:text-[#B4B3AC] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6]'
             }`}
           >
             Combined View
@@ -70,44 +70,44 @@ export function ResultsChart({ results }: ResultsChartProps) {
           <button
             type="button"
             onClick={() => setViewMode('chart')}
-            className={`px-2.5 py-1 text-xs font-sans flex items-center gap-1.5 transition-colors cursor-pointer ${
+            className={`min-h-[44px] px-3.5 py-2 text-[13px] font-sans flex items-center gap-1.5 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none ${
               viewMode === 'chart'
-                ? 'bg-[#FFFFFF] dark:bg-[#181B18] text-[#1B1B1B] dark:text-[#ECEBE6] font-medium shadow-2xs'
-                : 'text-[#5A5A55] dark:text-[#9E9D96] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6]'
+                ? 'bg-[#FFFFFF] dark:bg-[#181B18] text-[#1B1B1B] dark:text-[#ECEBE6] font-semibold border border-[#E4E2DC] dark:border-[#2E332E]'
+                : 'text-[#4A4A45] dark:text-[#B4B3AC] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6]'
             }`}
           >
-            <BarChart3 className="w-3.5 h-3.5" aria-hidden="true" />
+            <BarChart3 className="w-4 h-4" aria-hidden="true" />
             <span>Chart</span>
           </button>
           <button
             type="button"
             onClick={() => setViewMode('table')}
-            className={`px-2.5 py-1 text-xs font-sans flex items-center gap-1.5 transition-colors cursor-pointer ${
+            className={`min-h-[44px] px-3.5 py-2 text-[13px] font-sans flex items-center gap-1.5 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#0B5A4D] dark:focus-visible:ring-[#3FB59B] outline-none ${
               viewMode === 'table'
-                ? 'bg-[#FFFFFF] dark:bg-[#181B18] text-[#1B1B1B] dark:text-[#ECEBE6] font-medium shadow-2xs'
-                : 'text-[#5A5A55] dark:text-[#9E9D96] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6]'
+                ? 'bg-[#FFFFFF] dark:bg-[#181B18] text-[#1B1B1B] dark:text-[#ECEBE6] font-semibold border border-[#E4E2DC] dark:border-[#2E332E]'
+                : 'text-[#4A4A45] dark:text-[#B4B3AC] hover:text-[#1B1B1B] dark:hover:text-[#ECEBE6]'
             }`}
           >
-            <TableIcon className="w-3.5 h-3.5" aria-hidden="true" />
+            <TableIcon className="w-4 h-4" aria-hidden="true" />
             <span>Table</span>
           </button>
         </div>
       </div>
 
       {/* Text Summary */}
-      <div className="text-sm text-[#5A5A55] dark:text-[#9E9D96] leading-relaxed max-w-[68ch]">
+      <div className="text-[17px] text-[#4A4A45] dark:text-[#B4B3AC] leading-[1.6] max-w-[68ch]">
         <p>{results.summary}</p>
         {results.metricDirection === 'lower-is-better' && (
-          <p className="mt-2 text-xs font-mono text-[#0E6B5C] dark:text-[#3FB59B]">
+          <p className="mt-2 text-[13px] font-mono text-[#0B5A4D] dark:text-[#3FB59B]">
             * Note: Lower numerical values indicate superior performance (less prediction error).
           </p>
         )}
       </div>
 
-      {/* Interactive Bar Chart (F24 specifications) */}
+      {/* Interactive Bar Chart (F24 specifications, grey bars >= 3:1 against track) */}
       {chart && (viewMode === 'both' || viewMode === 'chart') && (
         <div className="space-y-4 pt-2">
-          <div className="flex items-center justify-between text-xs text-[#5A5A55] dark:text-[#9E9D96] font-mono border-b border-[#E4E2DC] dark:border-[#272B27] pb-2">
+          <div className="flex items-center justify-between text-[13px] text-[#4A4A45] dark:text-[#B4B3AC] font-mono border-b border-[#E4E2DC] dark:border-[#2E332E] pb-2">
             <span>Model Architecture</span>
             <span>{chart.metricLabel} (Test Set, scale from 0)</span>
           </div>
@@ -121,15 +121,15 @@ export function ResultsChart({ results }: ResultsChartProps) {
               return (
                 <div
                   key={item.label}
-                  className="space-y-1 group"
+                  className="space-y-1.5 group"
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
-                  <div className="flex items-baseline justify-between text-xs">
-                    <span className={`font-sans ${isTop ? 'font-semibold text-[#1B1B1B] dark:text-[#ECEBE6]' : 'text-[#5A5A55] dark:text-[#9E9D96]'}`}>
+                  <div className="flex items-baseline justify-between text-[15px]">
+                    <span className={`font-sans ${isTop ? 'font-semibold text-[#1B1B1B] dark:text-[#ECEBE6]' : 'text-[#4A4A45] dark:text-[#B4B3AC]'}`}>
                       {item.label}
                       {item.secondaryMetric && (
-                        <span className="ml-2 font-mono text-[11px] text-[#0E6B5C] dark:text-[#3FB59B]">
+                        <span className="ml-2 font-mono text-[13px] text-[#0B5A4D] dark:text-[#3FB59B]">
                           ({item.secondaryMetric})
                         </span>
                       )}
@@ -141,7 +141,7 @@ export function ResultsChart({ results }: ResultsChartProps) {
 
                   {/* Accessible bar container starting from 0 */}
                   <div
-                    className="h-6 w-full bg-[#F4F3EE] dark:bg-[#121412] border border-[#E4E2DC] dark:border-[#272B27] p-0.5 flex items-center"
+                    className="h-7 w-full bg-[#E4E2DC] dark:bg-[#1E231E] p-0.5 flex items-center border border-[#E4E2DC] dark:border-[#2E332E]"
                     role="progressbar"
                     aria-valuenow={item.value}
                     aria-valuemin={0}
@@ -151,10 +151,10 @@ export function ResultsChart({ results }: ResultsChartProps) {
                     <div
                       className={`h-full motion-safe:transition-all motion-safe:duration-300 motion-reduce:transition-none ${
                         isTop
-                          ? 'bg-[#0E6B5C] dark:bg-[#3FB59B]'
+                          ? 'bg-[#0B5A4D] dark:bg-[#3FB59B]'
                           : isHovered
-                          ? 'bg-[#5A5A55] dark:bg-[#9E9D96]'
-                          : 'bg-[#C5C3BC] dark:bg-[#404540]'
+                          ? 'bg-[#4A4A45] dark:bg-[#B4B3AC]'
+                          : 'bg-[#8C897E] dark:bg-[#5A635A]'
                       }`}
                       style={{ width: `${widthPct}%` }}
                     />
@@ -164,13 +164,13 @@ export function ResultsChart({ results }: ResultsChartProps) {
             })}
           </div>
 
-          {/* F24: Explanatory text under chart */}
-          <div className="space-y-1 text-[11px] font-mono text-[#5A5A55] dark:text-[#9E9D96] pt-2 border-t border-[#E4E2DC] dark:border-[#272B27]">
+          {/* Explanatory text under chart */}
+          <div className="space-y-1 text-[13px] font-mono text-[#4A4A45] dark:text-[#B4B3AC] pt-2 border-t border-[#E4E2DC] dark:border-[#2E332E]">
             <p>Each bar is the average error in predicting remaining engine life, in cycles. Shorter bar = more accurate.</p>
             {results.comparisonNote ? (
-              <p className="text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">{results.comparisonNote}</p>
+              <p className="text-[#0B5A4D] dark:text-[#3FB59B] font-semibold">{results.comparisonNote}</p>
             ) : (
-              <p className="text-[#0E6B5C] dark:text-[#3FB59B] font-semibold">The hybrid model is 3% more accurate than XGBoost and 32% more accurate than the CNN.</p>
+              <p className="text-[#0B5A4D] dark:text-[#3FB59B] font-semibold">The hybrid model is 3% more accurate than XGBoost and 32% more accurate than the CNN.</p>
             )}
           </div>
         </div>
@@ -180,39 +180,39 @@ export function ResultsChart({ results }: ResultsChartProps) {
       {results.table && (viewMode === 'both' || viewMode === 'table') && (
         <div className="pt-2">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono border border-[#E4E2DC] dark:border-[#272B27]">
+            <table className="w-full text-left text-[13px] font-mono border border-[#E4E2DC] dark:border-[#2E332E]">
               <caption className="sr-only">
                 {chart?.title || 'Model Benchmark Data Table Alternative'}
               </caption>
-              <thead className="bg-[#F4F3EE] dark:bg-[#121412] text-[#1B1B1B] dark:text-[#ECEBE6] border-b border-[#E4E2DC] dark:border-[#272B27]">
+              <thead className="bg-[#F8F7F3] dark:bg-[#151815] text-[#1B1B1B] dark:text-[#ECEBE6] border-b border-[#E4E2DC] dark:border-[#2E332E]">
                 <tr>
-                  <th scope="col" className="px-4 py-2.5 font-medium">Model / Approach</th>
-                  <th scope="col" className="px-4 py-2.5 font-medium tabular-nums">
+                  <th scope="col" className="px-4 py-3 font-semibold">Model / Approach</th>
+                  <th scope="col" className="px-4 py-3 font-semibold tabular-nums">
                     {results.metricName || 'Primary Metric'}
                   </th>
-                  <th scope="col" className="px-4 py-2.5 font-medium tabular-nums">Secondary Metric</th>
+                  <th scope="col" className="px-4 py-3 font-semibold tabular-nums">Secondary Metric</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E4E2DC] dark:divide-[#272B27]">
+              <tbody className="divide-y divide-[#E4E2DC] dark:divide-[#2E332E]">
                 {results.table.map((row) => (
                   <tr
                     key={row.name}
                     className={
                       row.isTop
-                        ? 'bg-[#0E6B5C]/5 dark:bg-[#3FB59B]/10 font-semibold text-[#0E6B5C] dark:text-[#3FB59B]'
+                        ? 'bg-[#0B5A4D]/5 dark:bg-[#3FB59B]/10 font-semibold text-[#0B5A4D] dark:text-[#3FB59B]'
                         : 'text-[#1B1B1B] dark:text-[#ECEBE6]'
                     }
                   >
-                    <td className="px-4 py-2.5 font-sans flex items-center gap-2">
-                      {row.name}
+                    <td className="px-4 py-3 font-sans flex items-center gap-2">
+                      <span>{row.name}</span>
                       {row.isTop && (
-                        <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 bg-[#0E6B5C] text-white dark:bg-[#3FB59B] dark:text-[#121412]">
+                        <span className="text-[12px] uppercase font-mono px-2 py-0.5 bg-[#0B5A4D] text-white dark:bg-[#3FB59B] dark:text-[#121412] font-semibold">
                           Top Model
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5 tabular-nums">{row.primaryScore}</td>
-                    <td className="px-4 py-2.5 tabular-nums text-[#5A5A55] dark:text-[#9E9D96]">
+                    <td className="px-4 py-3 tabular-nums">{row.primaryScore}</td>
+                    <td className="px-4 py-3 tabular-nums text-[#4A4A45] dark:text-[#B4B3AC]">
                       {row.secondaryScore || '—'}
                     </td>
                   </tr>
